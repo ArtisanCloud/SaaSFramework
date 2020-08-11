@@ -1,0 +1,24 @@
+{
+    "name": "artisan-cloud/saas-framework",
+    "description": "This package is a saas build framework  for developer via laravel framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "michael hu",
+            "email": "hbj148@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "ArtisanCloud\\SaaSFramework\\": "src"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.2"
+    }
+}
+
