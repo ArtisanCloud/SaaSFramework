@@ -15,6 +15,11 @@ class CreateLandlordsTable extends Migration
     {
         Schema::create('landlords', function (Blueprint $table) {
             $table->bigIncrements('id');
+
+            $table->string('uuid')->index();
+            $table->string('name');
+            $table->string('app-domain');
+
             $table->timestamps();
         });
     }

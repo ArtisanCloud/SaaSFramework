@@ -35,17 +35,9 @@ class UserServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
               // publish config file
-//              $this->publishes([
-//                  __DIR__ . '/../../config/user.php' => "/../" . config_path('user.php'),
-//              ], ['SaaSFramework', 'User-Model']);
-
-              // register artisan command
-              if (! class_exists('CreateUserTable')) {
-                $this->publishes([
-                  __DIR__ . '/../../database/migrations/create_users_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_users_table.php'),
-                  // you can add any number of migrations here
-                ], ['SaaSFramework', 'User-Migration']);
-              }
+              $this->publishes([
+                  __DIR__ . '/../../config/user.php' => "/../" . config_path('artisancloud/user.php'),
+              ], ['SaaSFramework', 'User-Config']);
             }
 
     }

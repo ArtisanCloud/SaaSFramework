@@ -2,9 +2,10 @@
 
 namespace ArtisanCloud\SaaSFramework\Providers;
 
+use ArtisanCloud\SaaSFramework\Services\LandService\src\Providers\LandServiceProvider;
 use ArtisanCloud\SaaSFramework\Services\LandlordService\src\Providers\LandlordServiceProvider;
-use ArtisanCloud\SaaSFramework\Services\TeamService\src\Providers\TeamServiceProvider;
 use ArtisanCloud\SaaSFramework\Services\TenantService\src\Providers\TenantServiceProvider;
+use ArtisanCloud\SaaSFramework\Services\TeamService\src\Providers\TeamServiceProvider;
 use ArtisanCloud\SaaSFramework\Services\UserService\src\Providers\UserServiceProvider;
 
 use Illuminate\Support\Facades\Artisan;
@@ -25,6 +26,7 @@ class FrameworkServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        $this->app->register(LandServiceProvider::class);
         $this->app->register(LandlordServiceProvider::class);
         $this->app->register(TenantServiceProvider::class);
         $this->app->register(UserServiceProvider::class);
@@ -41,9 +43,11 @@ class FrameworkServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
 
-//                $this->publishes([
-//                    __DIR__ . '/../'.SaaSFrameworkCommand::FOLDER_MIGRATION.'/migrations' => "/../" . app_path(),
-//                ], 'saas-monomer-migrations');
+            $this->publishes([
+                __DIR__ . '/../../config/framework.php' => "/../" . config_path('artisancloud/framework.php'),
+            ], ['SaaSFramework', 'Landlord-Config']);
+
+
         }
     }
 }

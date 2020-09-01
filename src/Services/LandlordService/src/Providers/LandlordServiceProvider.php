@@ -35,9 +35,9 @@ class LandlordServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
               // publish config file
-//              $this->publishes([
-//                  __DIR__ . '/../../config/landlord.php' => "/../" . config_path('landlord.php'),
-//              ], ['SaaSFramework', 'Landlord-Model']);
+              $this->publishes([
+                  __DIR__ . '/../../config/landlord.php' => "/../" . config_path('artisancloud/landlord.php'),
+              ], ['SaaSFramework', 'Landlord-Config']);
 
               // register artisan command
               if (! class_exists('CreateLandlordTable')) {

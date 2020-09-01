@@ -36,8 +36,8 @@ class TeamServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
               // publish config file
 //              $this->publishes([
-//                  __DIR__ . '/../../config/team.php' => "/../" . config_path('team.php'),
-//              ], ['SaaSFramework', 'Team-Model']);
+//                  __DIR__ . '/../../config/team.php' => "/../" . config_path('artisancloud/team.php'),
+//              ], ['SaaSFramework', 'Team-Config']);
 
               // register artisan command
               if (! class_exists('CreateTeamTable')) {

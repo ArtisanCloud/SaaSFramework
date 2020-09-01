@@ -35,9 +35,9 @@ class TenantServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
               // publish config file
-//              $this->publishes([
-//                  __DIR__ . '/../../config/tenant.php' => "/../" . config_path('tenant.php'),
-//              ], ['SaaSFramework', 'Tenant-Model']);
+              $this->publishes([
+                  __DIR__ . '/../../config/tenant.php' => "/../" . config_path('artisancloud/tenant.php'),
+              ], ['SaaSFramework', 'Tenant-Config']);
 
               // register artisan command
               if (! class_exists('CreateTenantTable')) {
