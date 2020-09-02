@@ -29,8 +29,6 @@ class FrameworkServiceProvider extends ServiceProvider
         $this->app->register(LandServiceProvider::class);
         $this->app->register(LandlordServiceProvider::class);
         $this->app->register(TenantServiceProvider::class);
-        $this->app->register(UserServiceProvider::class);
-        $this->app->register(TeamServiceProvider::class);
     }
 
     /**
@@ -41,13 +39,14 @@ class FrameworkServiceProvider extends ServiceProvider
     public function boot()
     {
 
+        $this->loadRoutesFrom(__DIR__.'/../../routes/api.php');
+
         if ($this->app->runningInConsole()) {
 
             $this->publishes([
                 __DIR__ . '/../../config/framework.php' => "/../" . config_path('artisancloud/framework.php'),
             ], ['SaaSFramework', 'Landlord-Config']);
-
-
         }
+
     }
 }

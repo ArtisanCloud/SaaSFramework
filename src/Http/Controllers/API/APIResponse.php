@@ -8,17 +8,15 @@ use Illuminate\Contracts\Support\Responsable;
 
 class APIResponse implements Responsable
 {
-    private $returnCode;
+    private int $returnCode = API_RETURN_CODE_INIT;
+    private string $returnMessage = '';
 
-    private $returnMessage;
+    private int $resultCode = 0;
+    private string $resultMessage = '';
 
-    private $resultCode;
+    private array $data = [];
 
-    private $resultMessage;
-
-    private $data;
-
-    public static function success($data = null)
+    public static function success($data = null) : string
     {
         $response = new self();
         $response->setReturnCode(API_RETURN_CODE_INIT);
@@ -30,7 +28,7 @@ class APIResponse implements Responsable
         return $response->toJson();
     }
 
-    public static function error($resultCode, $resultMessage = "", $returnMessage=null)
+    public static function error($resultCode, $resultMessage = "", $returnMessage = null) : string
     {
         $response = new self();
         $response->setReturnCode(API_RETURN_CODE_ERROR);
@@ -51,11 +49,21 @@ class APIResponse implements Responsable
         return $response->toJson();
     }
 
+    /**
+     * Is no error.
+     *
+     * @return bool
+     */
+    public function isNoError() : bool
+    {
+
+        return $this->returnCode == API_RETURN_CODE_INIT;
+    }
 
     /**
      * @return mixed
      */
-    public function getReturnCode()
+    public function getReturnCode(): int
     {
         return $this->returnCode;
     }
@@ -63,7 +71,7 @@ class APIResponse implements Responsable
     /**
      * @param mixed $returnCode
      */
-    public function setReturnCode($returnCode)
+    public function setReturnCode($returnCode) : APIResponse
     {
         $this->returnCode = $returnCode;
         return $this;
@@ -72,7 +80,7 @@ class APIResponse implements Responsable
     /**
      * @return mixed
      */
-    public function getReturnMessage()
+    public function getReturnMessage() : string
     {
         return $this->returnMessage;
     }
@@ -80,7 +88,7 @@ class APIResponse implements Responsable
     /**
      * @param mixed $returnMessage
      */
-    public function setReturnMessage($returnMessage)
+    public function setReturnMessage($returnMessage) : APIResponse
     {
         $this->returnMessage = $returnMessage;
         return $this;
@@ -89,7 +97,7 @@ class APIResponse implements Responsable
     /**
      * @return mixed
      */
-    public function getResultCode()
+    public function getResultCode() : int
     {
         return $this->resultCode;
     }
@@ -97,7 +105,7 @@ class APIResponse implements Responsable
     /**
      * @param mixed $resultCode
      */
-    public function setResultCode($resultCode)
+    public function setResultCode($resultCode) : APIResponse
     {
         $this->resultCode = $resultCode;
         return $this;
@@ -106,7 +114,7 @@ class APIResponse implements Responsable
     /**
      * @return mixed
      */
-    public function getResultMessage()
+    public function getResultMessage() : string
     {
         return $this->resultMessage;
     }
@@ -114,7 +122,7 @@ class APIResponse implements Responsable
     /**
      * @param mixed $resultMessage
      */
-    public function setResultMessage($resultMessage)
+    public function setResultMessage($resultMessage) : string
     {
         $this->resultMessage = $resultMessage;
         return $this;
@@ -123,7 +131,7 @@ class APIResponse implements Responsable
     /**
      * @return mixed
      */
-    public function getData()
+    public function getData() : array
     {
         return $this->data;
     }
@@ -131,13 +139,13 @@ class APIResponse implements Responsable
     /**
      * @param mixed $data
      */
-    public function setData($data)
+    public function setData($data) : APIResponse
     {
         $this->data = $data;
         return $this;
     }
 
-    public function toJson()
+    public function toJson() : string
     {
         $response = [
             'meta' => [
@@ -158,7 +166,7 @@ class APIResponse implements Responsable
     /**
      * @inheritDoc
      */
-    public function toResponse($request)
+    public function toResponse($request) : string
     {
         return $this->toJson();
     }
@@ -166,10 +174,10 @@ class APIResponse implements Responsable
     /**
      * Throw json response.
      *
-     * @param  null
+     * @param null
      * @return Response response
      */
-    public function throwJSONResponse()
+    public function throwJSONResponse() : void
     {
         header('Content-Type: application/json');
         echo $this->toResponse()->content();

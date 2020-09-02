@@ -36,7 +36,7 @@ class LandServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
               // publish config file
               $this->publishes([
-                  __DIR__ . '/../../config/land.php' => "/../" . config_path('aritsancloud/land.php'),
+                  __DIR__ . '/../../config/land.php' => "/../" . config_path('artisancloud/land.php'),
               ], ['SaaSFramework', 'Land-Config']);
 
 

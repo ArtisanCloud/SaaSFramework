@@ -21,5 +21,15 @@ return [
             'schema' => 'public',
             'sslmode' => 'prefer',
         ]
-    ]
+    ],
+
+    'OPEN_API_DOMAIN' => env('APP_OPEN_API_URL'),
+    'WHITE_LIST_DOMAIN' => env('APP_WHITE_LIST_URL'),
+    'methodAll' => ['options', 'get', 'post', 'put', 'delete'],
+    'methodGet' => ['options', 'get'],
+    'methodPost' => ['options', 'post'],
+    'methodPut' => ['options', 'put'],
+    'methodDelete' => ['options', 'delete'],
+    'API_VERSION' => 'v1',
+    'API_VERSION_PATH' => 'api_' . $_API_VERSION,
 ];

@@ -13,22 +13,13 @@ class ClientProfile extends Model
     protected $table = 'client_profiles';
 
     const CACHE_TIMEOUT = 60;
-    const PLATFORM_SALESFORCE = 'Salesforce';
+    const PLATFORM_WEB = 'Web';
     const PLATFORM_WECHAT_MINI_PROGRAM = 'WeChat Mini Program';
     const PLATFORM_IOS = 'iOS';
     const PLATFORM_ANDROID = 'Android';
-    const PLATFORM_RETAIL = 'Retail';
-    const PLATFORM_JD = 'JD';
-    const PLATFORM_TMALL = 'TMall';
-    const PLATFORM_DIANPING = 'DianPing';
     const PLATFORM_ALL = 'All';
 
-    const CHANNEL_SPACE = 'Space';
-    const CHANNEL_BENZ = 'Mercedes';
-    const CHANNEL_WEWORK = 'WeWork';
-
-    const OS_TYPE_IOS = 1;
-    const OS_TYPE_ANDROID = 2;
+    const CHANNEL_DEFAULT = 'default';
 
     const LOCALE_EN = 'en_US';
     const LOCALE_CN = 'zh_CN';
@@ -37,26 +28,15 @@ class ClientProfile extends Model
     const REQUEST_TIMEZONE = 'Asia/Shanghai';
 
     const ARRAY_PLATFORM = [
-        self::PLATFORM_SALESFORCE,
+        self::PLATFORM_WEB,
         self::PLATFORM_WECHAT_MINI_PROGRAM,
         self::PLATFORM_IOS,
         self::PLATFORM_ANDROID,
-        self::PLATFORM_RETAIL,
-        self::PLATFORM_JD,
-        self::PLATFORM_TMALL,
-        self::PLATFORM_DIANPING,
         self::PLATFORM_ALL,
     ];
 
     const ARRAY_CHANNEL = [
-        self::CHANNEL_SPACE,
-        self::CHANNEL_WEWORK,
-        self::CHANNEL_BENZ,
-    ];
-
-    const ARRAY_OS_TYPE = [
-        self::OS_TYPE_IOS,
-        self::OS_TYPE_ANDROID,
+        self::CHANNEL_DEFAULT,
     ];
 
     const ARRAY_LOCALE = [
@@ -65,8 +45,8 @@ class ClientProfile extends Model
     ];
 
     const ARRAY_TIMEZONE = [
-        self::LOCALE_EN,
-        self::LOCALE_CN,
+        self::TIMEZONE,
+        self::REQUEST_TIMEZONE,
     ];
 
     /**
@@ -84,7 +64,7 @@ class ClientProfile extends Model
      *
      * @param array $data
      *
-     * @return \App\Models\ClientProfile
+     * @return ClientProfile
      *
      */
     public function createProfile($data)
@@ -109,7 +89,7 @@ class ClientProfile extends Model
      *
      * @param array $data
      *
-     * @return \App\Models\ClientProfile
+     * @return ClientProfile
      *
      */
     public function getProfile($data = [])
@@ -164,7 +144,7 @@ class ClientProfile extends Model
     {
 
         // client cannot override the message locales.
-        $locale = \App\Models\ClientProfile::getRequestLocale();
+        $locale = ClientProfile::getRequestLocale();
 //        dd($locale);
         if (!$locale) {
 //            $locale = ClientProfile::_getCachedClientLocale();

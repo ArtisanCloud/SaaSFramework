@@ -1,18 +1,16 @@
 <?php
 
-namespace ArtisanCloud\SaaSMonomer\Http\Middleware;
+namespace ArtisanCloud\SaaSFramework\Http\Middleware;
 
-use App\Http\Controllers\API\APIResponse;
 use App\Models\Account;
-use App\Models\ClientProfile;
 
+use ArtisanCloud\SaaSFramework\Http\Controllers\API\APIResponse;
+use ArtisanCloud\SaaSFramework\Models\ClientProfile;
 use Closure;
 use Illuminate\Support\Arr;
 
 class CheckHeader
 {
-    use APIResponse;
-
     /**
      * The URIs that should be excluded from CSRF verification.
      *
@@ -33,7 +31,7 @@ class CheckHeader
     {
 
         // init with error codes
-        $this->resetCodes();
+        $apiResponse = new APIResponse();
 
         // set  session language
         $locale = ClientProfile::getSessionLocale();
@@ -65,7 +63,7 @@ class CheckHeader
 
         }
 
-        if(!$this->isNoError()){
+        if(!$apiResponse->isNoError()){
             // we can log here and check where access our server with invalid request
 
             return $this->getJSONResponse();
