@@ -5,6 +5,7 @@ namespace ArtisanCloud\SaaSFramework\Http\Controllers\API;
 
 use ArtisanCloud\SaaSFramework\Models\ClientProfile;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\JsonResponse;
 
 class APIResponse implements Responsable
 {
@@ -15,6 +16,19 @@ class APIResponse implements Responsable
     private string $resultMessage = '';
 
     private ?array $data = [];
+
+    protected $m_module;
+
+    public function __construct()
+    {
+        $this->m_returnCode = API_RETURN_CODE_INIT;
+        $this->m_module = 'messages';
+    }
+
+    public function setLocaleModule($module = 'messages')
+    {
+        $this->m_module = $module;
+    }
 
     public static function success($data = null): string
     {
@@ -65,13 +79,18 @@ class APIResponse implements Responsable
      *
      * @param int $iReturnCode
      * @param int $iReturnCode
+     * @param string $returnMSG
+     * @param string $resultMSG
      *
      * @return void
      */
-    public function setCode($iResultCode, $iReturnCode = API_RETURN_CODE_ERROR, $returnMSG = '', $resultMSG = ''): void
+    public function setCode(int $iResultCode, int $iReturnCode = API_RETURN_CODE_ERROR, string $returnMSG = '', string $resultMSG = ''): void
     {
-        $this->setReturnCode($iReturnCode, $returnMSG);
-        $this->setResultCode($iResultCode, $resultMSG);
+        $this->setReturnCode($iReturnCode);
+        $this->setReturnMessage($returnMSG);
+
+        $this->setResultCode($iResultCode);
+        $this->setResultMessage($resultMSG);
     }
 
     /**
@@ -83,9 +102,9 @@ class APIResponse implements Responsable
     }
 
     /**
-     * @param mixed $returnCode
+     * @param int $returnCode
      */
-    public function setReturnCode($returnCode): APIResponse
+    public function setReturnCode(int $returnCode): APIResponse
     {
         $this->returnCode = $returnCode;
         return $this;
@@ -100,11 +119,11 @@ class APIResponse implements Responsable
     }
 
     /**
-     * @param mixed $returnMessage
+     * @param string $returnMessage
      */
-    public function setReturnMessage($returnMessage): APIResponse
+    public function setReturnMessage(string $returnMessage = ''): APIResponse
     {
-        $this->returnMessage = $returnMessage;
+        $this->returnMessage = $this->returnMessage != "" ? $this->returnMessage : $this->getLocaleMessage($this->returnCode);
         return $this;
     }
 
@@ -117,9 +136,9 @@ class APIResponse implements Responsable
     }
 
     /**
-     * @param mixed $resultCode
+     * @param int $resultCode
      */
-    public function setResultCode($resultCode): APIResponse
+    public function setResultCode(int $resultCode): APIResponse
     {
         $this->resultCode = $resultCode;
         return $this;
@@ -134,11 +153,11 @@ class APIResponse implements Responsable
     }
 
     /**
-     * @param mixed $resultMessage
+     * @param string $resultMessage
      */
-    public function setResultMessage($resultMessage): APIResponse
+    public function setResultMessage(string $resultMessage=''): APIResponse
     {
-        $this->resultMessage = $resultMessage;
+        $this->resultMessage = $this->resultMessage != "" ? $this->resultMessage : $this->getLocaleMessage($this->resultCode);
         return $this;
     }
 
@@ -159,7 +178,7 @@ class APIResponse implements Responsable
         return $this;
     }
 
-    public function toJson(): string
+    public function toJson(): JsonResponse
     {
         $response = [
             'meta' => [
@@ -175,6 +194,26 @@ class APIResponse implements Responsable
             $response['data'] = $this->data;
         }
         return response()->json($response);
+    }
+
+
+    /**
+     * Get locale message.
+     *
+     * @param string $code
+     *
+     * @return string $strMessage
+     */
+    protected function getLocaleMessage($code = '')
+    {
+
+//        dd($locale);
+
+        $module = $this->m_module ?? 'messages';
+        $strMessage = __("{$module}.{$code}");
+//        dump($code,$strMessage);
+
+        return $strMessage;
     }
 
     /**

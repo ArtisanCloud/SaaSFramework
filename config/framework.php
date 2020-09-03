@@ -23,13 +23,20 @@ return [
         ]
     ],
 
-    'OPEN_API_DOMAIN' => env('APP_OPEN_API_URL'),
-    'WHITE_LIST_DOMAIN' => env('APP_WHITE_LIST_URL'),
-    'methodAll' => ['options', 'get', 'post', 'put', 'delete'],
-    'methodGet' => ['options', 'get'],
-    'methodPost' => ['options', 'post'],
-    'methodPut' => ['options', 'put'],
-    'methodDelete' => ['options', 'delete'],
-    'API_VERSION' => 'v1',
-    'API_VERSION_PATH' => 'api_' . $_API_VERSION,
+    'api_version' => 'v1',
+    'api_version_path' => 'api_v1',
+
+    'router' => [
+        'open_api_domain' => env('APP_OPEN_API_URL'),
+        'white_list_domain' => env('APP_WHITE_LIST_URL'),
+        'methodAll' => ['options', 'get', 'post', 'put', 'delete'],
+        'methodGet' => ['options', 'get'],
+        'methodPost' => ['options', 'post'],
+        'methodPut' => ['options', 'put'],
+        'methodDelete' => ['options', 'delete'],
+        'namespaceAPI' => 'API',
+    ],
+
+    'invitation_code_channel' => env('INVITATION_CODE_CHANNEL','api'),
+    'verify_code_channel' => env('VERIFY_CODE_CHANNEL','sms'),
 ];

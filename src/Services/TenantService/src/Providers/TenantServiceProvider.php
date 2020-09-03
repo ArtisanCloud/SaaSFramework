@@ -42,7 +42,7 @@ class TenantServiceProvider extends ServiceProvider
               // register artisan command
               if (! class_exists('CreateTenantTable')) {
                 $this->publishes([
-                  __DIR__ . '/../../database/migrations/create_tenants_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_tenants_table.php'),
+                  __DIR__ . '/../../database/migrations/create_tenants_table.php' => database_path('migrations/2020_08_01_000030_create_tenants_table.php'),
                   // you can add any number of migrations here
                 ], ['SaaSFramework', 'Tenant-Migration']);
               }

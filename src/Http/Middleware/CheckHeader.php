@@ -65,7 +65,6 @@ class CheckHeader
 
         if(!$apiResponse->isNoError()){
             // we can log here and check where access our server with invalid request
-
             return $apiResponse->toJson();
         }
 
