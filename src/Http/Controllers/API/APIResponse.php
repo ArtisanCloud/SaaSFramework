@@ -3,7 +3,7 @@
 
 namespace ArtisanCloud\SaaSFramework\Http\Controllers\API;
 
-use ArtisanCloud\SaaSMonomer\Models\ClientProfile;
+use ArtisanCloud\SaaSFramework\Models\ClientProfile;
 use Illuminate\Contracts\Support\Responsable;
 
 class APIResponse implements Responsable
@@ -14,9 +14,9 @@ class APIResponse implements Responsable
     private int $resultCode = 0;
     private string $resultMessage = '';
 
-    private array $data = [];
+    private ?array $data = [];
 
-    public static function success($data = null) : string
+    public static function success($data = null): string
     {
         $response = new self();
         $response->setReturnCode(API_RETURN_CODE_INIT);
@@ -28,7 +28,7 @@ class APIResponse implements Responsable
         return $response->toJson();
     }
 
-    public static function error($resultCode, $resultMessage = "", $returnMessage = null) : string
+    public static function error($resultCode, $resultMessage = "", $returnMessage = null): string
     {
         $response = new self();
         $response->setReturnCode(API_RETURN_CODE_ERROR);
@@ -54,10 +54,24 @@ class APIResponse implements Responsable
      *
      * @return bool
      */
-    public function isNoError() : bool
+    public function isNoError(): bool
     {
 
         return $this->returnCode == API_RETURN_CODE_INIT;
+    }
+
+    /**
+     * Set codes.
+     *
+     * @param int $iReturnCode
+     * @param int $iReturnCode
+     *
+     * @return void
+     */
+    public function setCode($iResultCode, $iReturnCode = API_RETURN_CODE_ERROR, $returnMSG = '', $resultMSG = ''): void
+    {
+        $this->setReturnCode($iReturnCode, $returnMSG);
+        $this->setResultCode($iResultCode, $resultMSG);
     }
 
     /**
@@ -71,7 +85,7 @@ class APIResponse implements Responsable
     /**
      * @param mixed $returnCode
      */
-    public function setReturnCode($returnCode) : APIResponse
+    public function setReturnCode($returnCode): APIResponse
     {
         $this->returnCode = $returnCode;
         return $this;
@@ -80,7 +94,7 @@ class APIResponse implements Responsable
     /**
      * @return mixed
      */
-    public function getReturnMessage() : string
+    public function getReturnMessage(): string
     {
         return $this->returnMessage;
     }
@@ -88,7 +102,7 @@ class APIResponse implements Responsable
     /**
      * @param mixed $returnMessage
      */
-    public function setReturnMessage($returnMessage) : APIResponse
+    public function setReturnMessage($returnMessage): APIResponse
     {
         $this->returnMessage = $returnMessage;
         return $this;
@@ -97,7 +111,7 @@ class APIResponse implements Responsable
     /**
      * @return mixed
      */
-    public function getResultCode() : int
+    public function getResultCode(): int
     {
         return $this->resultCode;
     }
@@ -105,7 +119,7 @@ class APIResponse implements Responsable
     /**
      * @param mixed $resultCode
      */
-    public function setResultCode($resultCode) : APIResponse
+    public function setResultCode($resultCode): APIResponse
     {
         $this->resultCode = $resultCode;
         return $this;
@@ -114,7 +128,7 @@ class APIResponse implements Responsable
     /**
      * @return mixed
      */
-    public function getResultMessage() : string
+    public function getResultMessage(): string
     {
         return $this->resultMessage;
     }
@@ -122,7 +136,7 @@ class APIResponse implements Responsable
     /**
      * @param mixed $resultMessage
      */
-    public function setResultMessage($resultMessage) : string
+    public function setResultMessage($resultMessage): APIResponse
     {
         $this->resultMessage = $resultMessage;
         return $this;
@@ -131,7 +145,7 @@ class APIResponse implements Responsable
     /**
      * @return mixed
      */
-    public function getData() : array
+    public function getData(): array
     {
         return $this->data;
     }
@@ -139,13 +153,13 @@ class APIResponse implements Responsable
     /**
      * @param mixed $data
      */
-    public function setData($data) : APIResponse
+    public function setData($data): APIResponse
     {
         $this->data = $data;
         return $this;
     }
 
-    public function toJson() : string
+    public function toJson(): string
     {
         $response = [
             'meta' => [
@@ -166,7 +180,7 @@ class APIResponse implements Responsable
     /**
      * @inheritDoc
      */
-    public function toResponse($request) : string
+    public function toResponse($request): string
     {
         return $this->toJson();
     }
@@ -177,7 +191,7 @@ class APIResponse implements Responsable
      * @param null
      * @return Response response
      */
-    public function throwJSONResponse() : void
+    public function throwJSONResponse(): void
     {
         header('Content-Type: application/json');
         echo $this->toResponse()->content();

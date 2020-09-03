@@ -52,21 +52,21 @@ class CheckHeader
 //        dd($account);
 
         if (!$platform || !in_array($platform, ClientProfile::ARRAY_PLATFORM)) {
-            $this->setCode(API_ERR_CODE_HEADER_PLATFORM);
+            $apiResponse->setCode(API_ERR_CODE_HEADER_PLATFORM);
 
 //        } elseif (!$channel || is_null($account) || $account->type!=Account::TYPE_BUSINESS) {
         } elseif (!$channel || !in_array($channel, ClientProfile::ARRAY_CHANNEL)) {
-            $this->setCode(API_ERR_CODE_HEADER_SOURCE);
+            $apiResponse->setCode(API_ERR_CODE_HEADER_SOURCE);
 
         } elseif (!$uuid) {
-            $this->setCode(API_ERR_CODE_HEADER_UUID);
+            $apiResponse->setCode(API_ERR_CODE_HEADER_UUID);
 
         }
 
         if(!$apiResponse->isNoError()){
             // we can log here and check where access our server with invalid request
 
-            return $this->getJSONResponse();
+            return $apiResponse->toJson();
         }
 
 
