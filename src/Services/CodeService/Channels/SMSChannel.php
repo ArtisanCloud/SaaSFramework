@@ -6,12 +6,12 @@ namespace ArtisanCloud\SaaSFramework\Services\CodeService\Channels;
 
 use App\Facades\SMSAliyun;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Channel;
-use AArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Sendable;
+
 
 class SMSChannel implements Channel
 {
 
-    function send(Sendable $sendable, $code, $options = [])
+    function send(string $to, $code, $options = [])
     {
         if (!isset($options['template'])) {
             throw new \Exception("template 参数不能为空");

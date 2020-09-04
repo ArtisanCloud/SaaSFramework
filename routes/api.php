@@ -26,25 +26,18 @@ $_api_version = config('artisancloud.framework.api_version');
 $_namespaceRouteAPI = 'ArtisanCloud\SaaSFramework\Http\Controllers\API';
 $_namespaceAPI = $_namespaceRouteAPI;
 
-$_landlord_domain = config('artisancloud.framework.domain.landlord');
-$_tenant_domain = config('artisancloud.framework.domain.tenant');
-
-
-
+$_domain_landlord = config('artisancloud.framework.domain.landlord');
+$_domain_tenant = config('artisancloud.framework.domain.tenant');
 
 /** Router **/
 Route::match($_methodAll, "api/{$_api_version}/", "{$_namespaceAPI}\\RouterAPIController@index");
-
-
-
-
 
 /** Landlord **/
 Route::group(
     [
         'namespace' => $_namespaceAPI,
         'prefix' => "api/{$_api_version}",
-        'domain' => $_landlord_domain,
+        'domain' => $_domain_landlord,
         'middleware' => ['checkHeader','checkUser']
     ], function () use ($_methodGet, $_methodPost, $_methodPut, $_methodDelete) {
 
@@ -55,7 +48,7 @@ Route::group(
     [
         'namespace' => $_namespaceAPI,
         'prefix' => "api/{$_api_version}",
-        'domain' => $_landlord_domain,
+        'domain' => $_domain_landlord,
         'middleware' => ['checkHeader', 'auth:api', 'checkUser']
     ], function () use ($_methodGet, $_methodPost, $_methodPut, $_methodDelete) {
 

@@ -25,7 +25,7 @@ class InvitationCodeAPIController extends APIController
     public function apiBatchGenerateCode(Request $request)
     {
         $generator = new RandomStringGenerator();
-        $this->m_invitationCodeService->batchGenerateCode($generator, 50);
+        $this->m_invitationCodeService->generateCode($generator, 50);
     }
 
     public function apiGetList(Request $request)

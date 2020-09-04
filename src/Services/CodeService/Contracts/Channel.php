@@ -6,7 +6,7 @@ namespace ArtisanCloud\SaaSFramework\Services\CodeService\Contracts;
 
 interface Channel
 {
-    function send(Sendable $sendable, $code, $options = []);
+    function send(string $to, $code, $options = []);
 
     function getIdentifier();
 }

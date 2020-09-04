@@ -6,7 +6,6 @@ namespace ArtisanCloud\SaaSFramework\Services\CodeService\Channels;
 
 use App\Services\HedgeService\src\Notifications\SendInvitation;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Channel;
-use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Sendable;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
@@ -25,7 +24,7 @@ class SendAPIChannel implements Channel
      * @param  mixed  $code
      * @return void
      */
-    public function send(Sendable $sendable, $code, $options = [])
+    public function send(string $to, $code, $options = [])
     {
         $notification = new SendInvitation($code);
         $arrayBody = $notification->toAPI($sendable);

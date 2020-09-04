@@ -27,33 +27,33 @@ interface CodeServiceContract
     function setThrottles($throttles);
 
     /**
-     * @param Sendable $sendable
+     * @param string $to
      * @param $code
      * @param string $type
      * @return bool
      */
-    function verify(Sendable $sendable, $code, $type = '');
+    function verify(string $to, $code, $type = '');
 
 
     /**
      * @param CodeGenerator $codeGenerator
-     * @param Sendable $sendable
+     * @param string $to
      * @param int $type
      * @param int $expires
      * @param array $options
      * @return mixed
      */
-    function sendVerifyCode(CodeGenerator $codeGenerator, Sendable $sendable, int $type, int $expires = 300, array $options = []);
+    function sendVerifyCode(CodeGenerator $codeGenerator, string $to, int $type, int $expires = 300, array $options = []);
 
     /**
      * @param CodeGenerator $codeGenerator
-     * @param Sendable $sendable
+     * @param string $to
      * @param int $type
      * @param int $expires
      * @param array $options
      * @return mixed
      */
-    function generateCode(CodeGenerator $codeGenerator, Sendable $sendable, int $type, int $expires = 300, array $options = []);
+    function generateCode(CodeGenerator $codeGenerator, string $to, int $type, int $expires = 300, array $options = []);
 
     function getSendable($code, $type = '');
 }

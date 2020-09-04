@@ -7,7 +7,7 @@ namespace App\Services\CodeService\Testing;
 use App\Services\CodeService\Contracts\Channel;
 use App\Services\CodeService\Contracts\CodeGenerator;
 use App\Services\CodeService\Contracts\Driver;
-use App\Services\CodeService\Contracts\Sendable;
+
 use App\Services\CodeService\Contracts\VerifyCodeService;
 
 class VerifyCodeServiceFake implements VerifyCodeService
@@ -53,7 +53,7 @@ class VerifyCodeServiceFake implements VerifyCodeService
     /**
      * @inheritDoc
      */
-    function verify(Sendable $sendable, $code, $label = '')
+    function verify(string $to, $code, $label = '')
     {
         if (isset(static::$verifycodes[$sendable->getVerifyCodeAddress($this->channel)])) {
             return static::$verifycodes[$sendable->getVerifyCodeAddress($this->channel)] == $code;
@@ -72,7 +72,7 @@ class VerifyCodeServiceFake implements VerifyCodeService
     /**
      * @inheritDoc
      */
-    function sendVerifyCode(CodeGenerator $codeGenerator, Sendable $sendable, $label = '', $expires = 300, array $options = [])
+    function sendVerifyCode(CodeGenerator $codeGenerator, string $to, $label = '', $expires = 300, array $options = [])
     {
         //
     }
@@ -80,13 +80,13 @@ class VerifyCodeServiceFake implements VerifyCodeService
     /**
      * @inheritDoc
      */
-    function generateVerifyCode(CodeGenerator $codeGenerator, Sendable $sendable, $label = '', $expires = 300, array $options = [])
+    function generateVerifyCode(CodeGenerator $codeGenerator, string $to, $label = '', $expires = 300, array $options = [])
     {
         // TODO: Implement generateVerifyCode() method.
     }
 
-    function getSendable($code, $label = '')
+    function getTo($code, $label = '')
     {
-        // TODO: Implement getSendable() method.
+        // TODO: Implement getTo() method.
     }
 }

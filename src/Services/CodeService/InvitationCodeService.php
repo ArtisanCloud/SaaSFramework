@@ -15,7 +15,7 @@ use ArtisanCloud\SaaSFramework\Services\CodeService\Models\VerifyCode;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Channel;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\CodeGenerator;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Driver;
-use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Sendable;
+
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\CodeServiceContract;
 
 use Illuminate\Support\Facades\DB;
@@ -74,14 +74,14 @@ class InvitationCodeService implements CodeServiceContract
 
     /**
      * @param CodeGenerator $codeGenerator
-     * @param Sendable $sendable
+     * @param string $to
      * @param int $type
      * @param int $expires
      * @param array $options
      *
      * @return $this
      */
-    function generateCode(CodeGenerator $codeGenerator, Sendable $sendable, $type = '', $expires = 300, array $options = [])
+    function generateCode(CodeGenerator $codeGenerator, string $to, $type = '', $expires = 300, array $options = [])
     {
         // 生成邀请码
         $code = $codeGenerator->getCode($options);
@@ -96,13 +96,13 @@ class InvitationCodeService implements CodeServiceContract
 
     /**
      * @param CodeGenerator $codeGenerator
-     * @param Sendable $sendable
+     * @param string $to
      * @param string $type
      * @param array $options
      * @return mixed
      * @throws SendVerifyCodeTooManyTimesException
      */
-    function sendVerifyCode(CodeGenerator $codeGenerator, Sendable $sendable, $type = '', $expires = 300, array $options = [])
+    function sendVerifyCode(CodeGenerator $codeGenerator, string $to, $type = '', $expires = 300, array $options = [])
     {
         // 频率限制
         if (!$this->driver->canSend($this->throttles, $this->channel, $sendable, $type)) {
@@ -136,11 +136,11 @@ class InvitationCodeService implements CodeServiceContract
 
     /**
      * Verify verify code
-     * @param Sendable $sendable
+     * @param string $to
      * @param $code
      * @return bool
      */
-    function verify(Sendable $sendable, $code, $type = '')
+    function verify(string $to, $code, $type = '')
     {
         $realCode = $this->driver->getVerifyCode($this->channel, $sendable, $type);
 
@@ -148,9 +148,9 @@ class InvitationCodeService implements CodeServiceContract
     }
 
 
-    function getSendable($code, $type = '')
+    function getTo($code, $type = '')
     {
-        return $this->driver->getSendable($code, $type);
+        return $this->driver->getTo($code, $type);
     }
 
     public function batchGenerateCode(CodeGenerator $codeGenerator, int $count = 50)

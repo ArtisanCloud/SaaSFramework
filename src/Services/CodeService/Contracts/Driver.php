@@ -6,21 +6,13 @@ namespace ArtisanCloud\SaaSFramework\Services\CodeService\Contracts;
 
 interface Driver
 {
-    /**
-     * @param string $expire seconds
-     * @param Sendable $sendable
-     * @param string $label
-     * @return mixed
-     */
-    function setVerifyCode($code, $expires, Channel $channel, Sendable $sendable, $label = '');
+    function setVerifyCode($code, int $expires, string $to, $type = '');
 
-    function getVerifyCode(Channel $channel, Sendable $sendable, $label = '');
+    function getVerifyCode(string $to, $type = '');
 
-    function canSend($throttles, Channel $channel, Sendable $sendable, $label = '');
+    function canSend($throttles, Channel $channel, $to, $type = '');
 
-    function getSendable($code, $label = '');
+    function getTo($code, $type = '');
 
-    function setQRCode($code, $expires, Channel $channel, Sendable $sendable, $label = '');
-    function readQRCode($value, $label);
 
 }

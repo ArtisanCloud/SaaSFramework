@@ -14,7 +14,7 @@ use ArtisanCloud\SaaSFramework\Services\CodeService\Models\VerifyCode;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Channel;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\CodeGenerator;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Driver;
-use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Sendable;
+
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\CodeServiceContract;
 use Illuminate\Support\Facades\DB;
 
@@ -72,11 +72,11 @@ class QRCodeService implements CodeServiceContract
 
     /**
      * Verify verify code
-     * @param Sendable $sendable
+     * @param string $to
      * @param $code
      * @return bool
      */
-    function verify(Sendable $sendable, $code, $label = '')
+    function verify(string $to, $code, $label = '')
     {
         $realCode = $this->driver->getVerifyCode($this->channel, $sendable, $label);
 
@@ -85,7 +85,7 @@ class QRCodeService implements CodeServiceContract
 
     /**
      * Verify verify code
-     * @param Sendable $sendable
+     * @param string $to
      * @param $code
      * @return User
      */
@@ -100,13 +100,13 @@ class QRCodeService implements CodeServiceContract
 
     /**
      * @param CodeGenerator $codeGenerator
-     * @param Sendable $sendable
+     * @param string $to
      * @param string $label
      * @param array $options
      * @return mixed
      * @throws SendVerifyCodeTooManyTimesException
      */
-    function sendVerifyCode(CodeGenerator $codeGenerator, Sendable $sendable, $label = '', $expires = 300, array $options = [])
+    function sendVerifyCode(CodeGenerator $codeGenerator, string $to, $label = '', $expires = 300, array $options = [])
     {
         // 频率限制
         if (!$this->driver->canSend($this->throttles, $this->channel, $sendable, $label)) {
@@ -137,7 +137,7 @@ class QRCodeService implements CodeServiceContract
         return $result;
     }
 
-    function generateVerifyCode(CodeGenerator $codeGenerator, Sendable $sendable, $label = '', $expires = 300, array $options = [])
+    function generateVerifyCode(CodeGenerator $codeGenerator, string $to, $label = '', $expires = 300, array $options = [])
     {
         // 生成验证码
         $code = $codeGenerator->getCode($options);
@@ -149,9 +149,9 @@ class QRCodeService implements CodeServiceContract
         return $code;
     }
 
-    function getSendable($code, $label = '')
+    function getTo($code, $label = '')
     {
-        return $this->driver->getSendable($code, $label);
+        return $this->driver->getTo($code, $label);
     }
 
 
