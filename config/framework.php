@@ -23,6 +23,12 @@ return [
         ]
     ],
 
+    'domain' => [
+        'land' => env('DOMAIN_LAND', 'artisancloud.com'),
+        'landlord' => env('DOMAIN_LANDLORD', 'admin.productman.com'),
+        'tenant' => env('DOMAIN_TENANT', 'productman.com'),
+    ],
+    
     'api_version' => 'v1',
     'api_version_path' => 'api_v1',
 
