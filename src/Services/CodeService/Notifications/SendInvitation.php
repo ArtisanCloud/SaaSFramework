@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\HedgeService\src\Notifications;
+namespace ArtisanCloud\SaaSFramework\Services\CodeService\Notifications;
 
 use App\Services\HedgeService\src\Channels\SendAPIChannel;
 use Illuminate\Bus\Queueable;
@@ -17,9 +17,11 @@ class SendInvitation extends Notification
     /**
      * Create a new notification instance.
      *
+     * @param mixed $code
+     *
      * @return void
      */
-    public function __construct(int $code)
+    public function __construct($code)
     {
         $this->m_code = $code;
     }
@@ -45,11 +47,15 @@ class SendInvitation extends Notification
     public function toAPI($notifiable) : array
     {
 
-        $view = view('invitation.email', ['code' => $this->m_code]);
+        $view = view('artisan-cloud::invitation', [
+            'code' => $this->m_code,
+            'email' => $notifiable,
+        ]);
+
         return $arrayBody = [
             "title" => "邀请函",
 	        "content" => $view->render(),
-	        "mailTo" => $notifiable->routes['api'],
+	        "mailTo" => $notifiable,
         ];
 
     }

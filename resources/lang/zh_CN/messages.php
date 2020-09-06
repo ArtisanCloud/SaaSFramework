@@ -33,7 +33,21 @@ return [
     API_ERR_CODE_HEADER_SOURCE => '头请求数据缺少渠道信息',
     API_ERR_CODE_HEADER_UUID => '头请求数据缺唯一标示信息',
 
+    API_ERR_CODE_FAIL_TO_SEND_INVITATION_CODE => '发送验证码失败',
+    
+    API_ERR_CODE_MOBILE_ALREADY_EXISTS => '该号码已注册',
+    API_ERR_CODE_USER_UNREGISTER => '此用户未注册',
+    API_ERR_CODE_ACCOUNT_UNREGISTER => '此账号未注册',
+    API_ERR_CODE_ACCOUNT_PASSWORD_INCORRECT => '账号密码错误',
+    API_ERR_CODE_ACCOUNT_FROZEN => "账号被冻结，请联系Space的客服",
+    API_ERR_CODE_MOBILE_UNREGISTER => '手机号码未注册',
+    API_ERR_CODE_FAIL_TO_CREATE_USER => '创建用户失败',
+    API_ERR_CODE_FAIL_TO_CREATE_USER_PROFILE => '创建用户profile失败',
+    API_ERR_CODE_FAIL_TO_UPDATE_LOCALE => '更新使用语言失败',
+
     API_ERR_CODE_SELF => "违规操作",
+
+    API_ERR_VALIDATION => '信息验证有错误',
 
 
     API_ERR_CODE_FAIL_TO_CREATE_VERIFY_CODE => '创建验证码失败',

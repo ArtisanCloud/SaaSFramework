@@ -2,9 +2,7 @@
 
 namespace ArtisanCloud\SaaSFramework\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ClientProfile extends Model
+class ClientProfile extends ArtisanCloudModel
 {
     // Disable Laravel's mass assignment protection
     protected $guarded = [];

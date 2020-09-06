@@ -2,8 +2,12 @@
 
 namespace ArtisanCloud\SaaSFramework\Http\Controllers\API;
 
+use ArtisanCloud\SaaSFramework\Http\Requests\RequestGenerateInvitationCode;
+
 use ArtisanCloud\SaaSFramework\Services\CodeService\CodeGenerators\RandomStringGenerator;
 use ArtisanCloud\SaaSFramework\Services\CodeService\InvitationCodeService;
+
+use ArtisanCloud\SaaSFramework\Services\CodeService\Models\Code;
 use Illuminate\Http\Request;
 
 
@@ -22,10 +26,19 @@ class InvitationCodeAPIController extends APIController
     }
 
 
-    public function apiBatchGenerateCode(Request $request)
+    public function apiGenerateCode(RequestGenerateInvitationCode $request)
     {
+        $email = $request->input('email');
+
         $generator = new RandomStringGenerator();
-        $this->m_invitationCodeService->generateCode($generator, 50);
+        $expire = 30*24*60*60; // 1 month
+        $bResult = $this->m_invitationCodeService->sendCode($generator, $email,Code::TYPE_INVTATION, $expire);
+        if(!$bResult){
+            return APIResponse::error(API_ERR_CODE_FAIL_TO_SEND_INVITATION_CODE);
+        }
+
+        return APIResponse::success();
+        
     }
 
     public function apiGetList(Request $request)

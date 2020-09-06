@@ -5,13 +5,13 @@ namespace ArtisanCloud\SaaSFramework\Services\CodeService;
 
 
 use ArtisanCloud\SaaSFramework\Exceptions\BaseException;
-use App\Exceptions\SendVerifyCodeException;
-use App\Exceptions\SendVerifyCodeTooManyTimesException;
+use App\Exceptions\SendCodeException;
+use App\Exceptions\SendCodeTooManyTimesException;
 
 use ArtisanCloud\SaaSFramework\Models\ClientProfile;
 use App\Models\User;
 
-use ArtisanCloud\SaaSFramework\Services\CodeService\Models\VerifyCode;
+use ArtisanCloud\SaaSFramework\Services\CodeService\Models\Code;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Channel;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\CodeGenerator;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Driver;
@@ -86,7 +86,7 @@ class InvitationCodeService implements CodeServiceContract
         // 生成邀请码
         $code = $codeGenerator->getCode($options);
         // 储存验证码
-        if (!$this->driver->setVerifyCode($code, $expires, $this->channel, $sendable, $type)) {
+        if (!$this->driver->setCode($code, $expires, $this->channel, $to, $type)) {
             return false;
         }
 
@@ -99,34 +99,35 @@ class InvitationCodeService implements CodeServiceContract
      * @param string $to
      * @param string $type
      * @param array $options
-     * @return mixed
-     * @throws SendVerifyCodeTooManyTimesException
+     * @return bool
+     * @throws SendCodeTooManyTimesException
      */
-    function sendVerifyCode(CodeGenerator $codeGenerator, string $to, $type = '', $expires = 300, array $options = [])
+    function sendCode(CodeGenerator $codeGenerator, string $to, $type = '', $expires = 300, array $options = []) : bool
     {
         // 频率限制
-        if (!$this->driver->canSend($this->throttles, $this->channel, $sendable, $type)) {
-//            throw new SendVerifyCodeTooManyTimesException();
+        if (!$this->driver->canSend($this->throttles, $this->channel, $to, $type)) {
+//            throw new SendCodeTooManyTimesException();
             throw new BaseException(API_ERR_CODE_VERIFY_CODE_REQUEST_DUPLICATED, null);
         }
 
-        $result = null;
+        $result = false;
         try {
-            DB::transaction(function () use ($expires, $options, $type, $sendable, $codeGenerator, &$result) {
+            $result = DB::transaction(function () use ($expires, $options, $type, $to, $codeGenerator) {
                 // 生成验证码
-                $code = $this->generateVerifyCode($codeGenerator, $sendable, $type, $expires, $options);
+                $code = $this->generateCode($codeGenerator, $to, $type, $expires, $options);
                 if (!$code) {
                     throw new \Exception(API_ERR_CODE_FAIL_TO_CREATE_VERIFY_CODE);
                 }
 
                 // 发送验证码
-                $result = $this->channel->send($sendable, $code, $options);
+                $result = $this->channel->send($to, $code, $options);
                 if (!$result) {
-                    throw new BaseException(API_ERR_CODE_FAIL_TO_SEND_VERIFY_CODE, null, $e);
+                    throw new \Exception(API_ERR_CODE_FAIL_TO_SEND_VERIFY_CODE);
                 }
-
+                return $result;
             });
         } catch (\Throwable $e) {
+//            dd($e);
             throw new BaseException($e->getCode(), null, $e);
         }
 
@@ -142,8 +143,7 @@ class InvitationCodeService implements CodeServiceContract
      */
     function verify(string $to, $code, $type = '')
     {
-        $realCode = $this->driver->getVerifyCode($this->channel, $sendable, $type);
-
+        $realCode = $this->driver->getCode($to, $type);
         return $realCode == $code;
     }
 
@@ -156,7 +156,7 @@ class InvitationCodeService implements CodeServiceContract
     public function batchGenerateCode(CodeGenerator $codeGenerator, int $count = 50)
     {
         foreach ($n as $item) {
-            $this->generateVerifyCode($generator, null, );
+            $this->generateCode($generator, null, );
         }
     }
 

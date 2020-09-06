@@ -10,11 +10,11 @@ use ArtisanCloud\SaaSFramework\Services\CodeService\Drivers\DatabaseDriver;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Drivers\CacheDriver;
 
 use ArtisanCloud\SaaSFramework\Services\CodeService\InvitationCodeService;
-use ArtisanCloud\SaaSFramework\Services\CodeService\VerifyCodeService;
+use ArtisanCloud\SaaSFramework\Services\CodeService\CodeService;
 
 use Illuminate\Support\ServiceProvider;
 
-class VerifyCodeServiceProvider extends ServiceProvider
+class CodeServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -23,7 +23,7 @@ class VerifyCodeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(VerifyCodeService::class, function ($app) {
+        $this->app->singleton(CodeService::class, function ($app) {
             $channel = SMSChannel::class;
             $driver = DatabaseDriver::class;
 //            if ($this->app->environment('local', 'development', 'ci', 'app-review')) {
@@ -31,7 +31,7 @@ class VerifyCodeServiceProvider extends ServiceProvider
                 $channel = NoneChannel::class;
                 $driver = CacheDriver::class;
             }
-            return new VerifyCodeService($app[$driver], $app[$channel]);
+            return new CodeService($app[$driver], $app[$channel]);
         });
 
         $this->app->singleton(InvitationCodeService::class, function ($app) {

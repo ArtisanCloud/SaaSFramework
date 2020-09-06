@@ -33,6 +33,20 @@ return [
     API_ERR_CODE_HEADER_SOURCE => 'header lacks channel',
     API_ERR_CODE_HEADER_UUID => 'header lacks uuid',
 
+    API_ERR_CODE_FAIL_TO_SEND_INVITATION_CODE => 'Failed to send invitation code',
+
+    API_ERR_CODE_MOBILE_ALREADY_EXISTS => 'This phone number has been registered',
+    API_ERR_CODE_USER_UNREGISTER => 'Unregistered user',
+    API_ERR_CODE_ACCOUNT_UNREGISTER => 'Unregistered account',
+    API_ERR_CODE_ACCOUNT_PASSWORD_INCORRECT => 'Account password is incorrect',
+    API_ERR_CODE_ACCOUNT_FROZEN => 'Account has been frozen, please contact Space Service Support',
+    API_ERR_CODE_MOBILE_UNREGISTER => 'Unregistered phone number',
+    API_ERR_CODE_FAIL_TO_CREATE_USER => 'fail to create user',
+    API_ERR_CODE_FAIL_TO_CREATE_USER_PROFILE => 'fail to create user profile',
+    API_ERR_CODE_FAIL_TO_UPDATE_LOCALE => 'fail to update locale',
+    
     API_ERR_CODE_SELF => "illegal operation",
+
+    API_ERR_VALIDATION => 'validation errors',
 
 ];

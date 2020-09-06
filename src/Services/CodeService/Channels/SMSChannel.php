@@ -24,7 +24,7 @@ class SMSChannel implements Channel
             'product' => 'Space'
         ];
         $optionTemplatePara = isset($options['template_para']) ? $options['template_para'] : [];
-        return SMSAliyun::sendSMS($sendable->getVerifyCodeAddress($this), $options['sign'], $options['template'], array_merge($templatePara, $optionTemplatePara));
+        return SMSAliyun::sendSMS($to->getCodeAddress($this), $options['sign'], $options['template'], array_merge($templatePara, $optionTemplatePara));
     }
 
     function getIdentifier()

@@ -5,7 +5,7 @@ namespace ArtisanCloud\SaaSFramework\Services\CodeService\Drivers;
 
 
 use App\Models\Account;
-use App\Models\VerifyCode;
+use App\Models\Code;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Channel;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Contracts\Driver;
 
@@ -16,37 +16,39 @@ use Illuminate\Support\Facades\Log;
 
 class CacheDriver implements Driver
 {
-    
+
     /**
      * @param mixed $code
      * @param int $expires seconds
+     * @param Channel $channel
      * @param string $to
      * @param string $type
      * @return mixed
      */
-    function setVerifyCode($code, int $expires,  string $to, $type = '')
+    function setCode($code, int $expires, Channel $channel, string $to, $type = '')
     {
-        return Cache::put($this->getCacheKey($channel, $sendable, $type), $code, Carbon::now()->addSeconds($expires));
+        return Cache::put($this->getCacheKey($channel, $to, $type), $code, Carbon::now()->addSeconds($expires));
     }
 
-    function getVerifyCode(string $to, $type = '')
+    function getCode(string $to, $type = '')
     {
-        return Cache::get($this->getCacheKey($channel, $sendable, $type));
+        return Cache::get($this->getCacheKey($channel, $to, $type));
     }
 
     function canSend($throttles, Channel $channel, $to, $type = '')
     {
-        return !Cache::has($this->getCacheKey($channel, $sendable, $type));
+        return !Cache::has($this->getCacheKey($channel, $to, $type));
     }
 
     function getTo($code, $type = '')
     {
 
     }
+
     protected function getCacheKey(Channel $channel, string $to, $type)
     {
-//        dd("verify-code:" . $type . ":" . $sendable->getVerifyCodeAddress($channel));
-        return "verify-code:" . $type . ":" . $sendable->getVerifyCodeAddress($channel);
+//        dd("verify-code:" . $type . ":" . $to->getCodeAddress($channel));
+        return "verify-code:" . $type . ":" . $to->getCodeAddress($channel);
     }
 
 }

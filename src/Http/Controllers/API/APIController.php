@@ -9,8 +9,7 @@ use App\Http\Controllers\Controller;
 
 class APIController extends Controller
 {
-
-
+    
     const DATE_FORMAT = "Y-m-d";
     const DATE_TIME_FORMAT = "Y-m-d H:i:s";
     const DATE_TIME_ISO_FORMAT = "Y-m-d\TH:i:s.u\Z";

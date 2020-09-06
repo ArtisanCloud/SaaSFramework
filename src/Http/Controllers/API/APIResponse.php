@@ -30,7 +30,12 @@ class APIResponse implements Responsable
         $this->m_module = $module;
     }
 
-    public static function success($data = null): string
+    public function getLocaleModule()
+    {
+        return $this->m_module;
+    }
+
+    public static function success($data = null): JsonResponse
     {
         $response = new self();
         $response->setReturnCode(API_RETURN_CODE_INIT);
@@ -42,24 +47,17 @@ class APIResponse implements Responsable
         return $response->toJson();
     }
 
-    public static function error($resultCode, $resultMessage = "", $returnMessage = null): string
+    public static function error($resultCode, $resultMessage = "", $returnMessage = null): JsonResponse
     {
         $response = new self();
+
         $response->setReturnCode(API_RETURN_CODE_ERROR);
         $response->setReturnMessage(trans("messages." . API_RETURN_CODE_ERROR));
-        $response->setResultCode($resultCode);
-
-        // given return message
-        if (!empty($returnMessage)) {
-            $response->setReturnMessage($returnMessage);
-        }
 
         // given result message
-        if (empty($resultMessage)) {
-            $response->setResultMessage(trans("messages." . $resultCode));
-        } else {
-            $response->setResultMessage($resultMessage);
-        }
+        $response->setResultCode($resultCode);
+        $response->setResultMessage($resultMessage);
+
         return $response->toJson();
     }
 
@@ -123,7 +121,7 @@ class APIResponse implements Responsable
      */
     public function setReturnMessage(string $returnMessage = ''): APIResponse
     {
-        $this->returnMessage = $this->returnMessage != "" ? $this->returnMessage : $this->getLocaleMessage($this->returnCode);
+        $this->returnMessage = $returnMessage ?: $this->getLocaleMessage($this->returnCode);
         return $this;
     }
 
@@ -155,9 +153,9 @@ class APIResponse implements Responsable
     /**
      * @param string $resultMessage
      */
-    public function setResultMessage(string $resultMessage=''): APIResponse
+    public function setResultMessage(string $resultMessage = ''): APIResponse
     {
-        $this->resultMessage = $this->resultMessage != "" ? $this->resultMessage : $this->getLocaleMessage($this->resultCode);
+        $this->resultMessage = $resultMessage ?: $this->getLocaleMessage($this->resultCode);
         return $this;
     }
 

@@ -43,7 +43,7 @@ interface CodeServiceContract
      * @param array $options
      * @return mixed
      */
-    function sendVerifyCode(CodeGenerator $codeGenerator, string $to, int $type, int $expires = 300, array $options = []);
+    function sendCode(CodeGenerator $codeGenerator, string $to, int $type, int $expires = 300, array $options = []);
 
     /**
      * @param CodeGenerator $codeGenerator
@@ -55,5 +55,10 @@ interface CodeServiceContract
      */
     function generateCode(CodeGenerator $codeGenerator, string $to, int $type, int $expires = 300, array $options = []);
 
-    function getSendable($code, $type = '');
+    /**
+     * @param mixed $code
+     * @param int $type
+     * @return mixed
+     */
+    function getTo($code, $type = '');
 }

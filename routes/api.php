@@ -30,7 +30,7 @@ $_domain_landlord = config('artisancloud.framework.domain.landlord');
 $_domain_tenant = config('artisancloud.framework.domain.tenant');
 
 /** Router **/
-Route::match($_methodAll, "api/{$_api_version}/", "{$_namespaceAPI}\\RouterAPIController@index");
+Route::match($_methodAll, "api/{$_api_version}/", "{$_namespaceRouteAPI}\\RouterAPIController@index");
 
 /** Landlord **/
 Route::group(
@@ -38,10 +38,10 @@ Route::group(
         'namespace' => $_namespaceAPI,
         'prefix' => "api/{$_api_version}",
         'domain' => $_domain_landlord,
-        'middleware' => ['checkHeader','checkUser']
-    ], function () use ($_methodGet, $_methodPost, $_methodPut, $_methodDelete) {
+        'middleware' => ['checkHeader']
+    ], function ($router) use ($_methodGet, $_methodPost, $_methodPut, $_methodDelete) {
 
-        Route::match($_methodPost, 'invitation/generate', 'InvitationCodeAPIController@apiBatchGenerateCode')->name('code.write.invitation.generate');
+    Route::match($_methodPost, 'invitation/generate', 'InvitationCodeAPIController@apiGenerateCode')->name('code.write.invitation.generate');
 });
 
 Route::group(
@@ -50,9 +50,9 @@ Route::group(
         'prefix' => "api/{$_api_version}",
         'domain' => $_domain_landlord,
         'middleware' => ['checkHeader', 'auth:api', 'checkUser']
-    ], function () use ($_methodGet, $_methodPost, $_methodPut, $_methodDelete) {
+    ], function ($router) use ($_methodGet, $_methodPost, $_methodPut, $_methodDelete) {
 
-//    Route::match($_methodPost, 'invitation/generate', 'InvitationCodeAPIController@apiBatchGenerateCode')->name('code.write.invitation.generate');
+    
 });
 
 

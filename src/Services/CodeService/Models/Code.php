@@ -2,10 +2,10 @@
 
 namespace ArtisanCloud\SaaSFramework\Services\CodeService\Models;
 
+use ArtisanCloud\SaaSFramework\Models\ArtisanCloudModel;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 
-class Code extends Model
+class Code extends ArtisanCloudModel
 {
     //
     const TYPE_INVTATION = 1;
@@ -25,7 +25,7 @@ class Code extends Model
 
     public static function exitsCodeSentToMobile($mobile)
     {
-        $strSQL = VerifyCode::where([
+        $strSQL = Code::where([
             "mobile" => $mobile,
             "status" => self::STATUS_NORMAL,
         ])->where("expired_at", '>', Carbon::now());
@@ -45,9 +45,9 @@ class Code extends Model
         $dNow = Carbon::now();
         $dExpiredAt = Carbon::now()->addMinute(5);
 
-        $iVerifyCode = rand(10000, 99999);
-        $bResult = VerifyCode::create([
-            "code" => $iVerifyCode,
+        $iCode = rand(10000, 99999);
+        $bResult = Code::create([
+            "code" => $iCode,
             "mobile" => $mobile,
             "type" => $type,
             "status" => self::STATUS_NORMAL,
@@ -56,7 +56,7 @@ class Code extends Model
         ])->usesTimestamps();
 
         if ($bResult) {
-            return $iVerifyCode;
+            return $iCode;
         } else {
             return $bResult;
         }
@@ -75,7 +75,7 @@ class Code extends Model
             $condition['mobile'] = $mobile;
         }
 
-        $vCode = VerifyCode::where($condition)->first();
+        $vCode = Code::where($condition)->first();
 
         return $vCode;
     }
@@ -101,7 +101,7 @@ class Code extends Model
 
     public function scopeUnexpiredPhoneCode($query, $phone, $label)
     {
-        return $query->where('mobile', $phone)->where('status', SpaceModel::STATUS_NORMAL)->where('type', $label)->where('expired_at', '>=', Carbon::now());
+        return $query->where('mobile', $phone)->where('status', ArtisanCloudModel::STATUS_NORMAL)->where('type', $label)->where('expired_at', '>=', Carbon::now());
     }
 
 }

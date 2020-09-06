@@ -45,7 +45,7 @@ class LandServiceProvider extends ServiceProvider
                 $this->publishes([
                   __DIR__ . '/../../database/migrations/create_lands_table.php' => database_path('migrations/2020_08_01_000010_create_lands_table.php'),
                   // you can add any number of migrations here
-                ], ['SaaSFramework', 'Land-Migration']);
+                ], ['ArtisanCloud','SaaSFramework', 'Land-Migration']);
               }
             }
 

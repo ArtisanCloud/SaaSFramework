@@ -22,7 +22,7 @@ class BaseException extends Exception
 
     public function render($request)
     {
-        return APIResponse::error($this->getResultCode(), $strMessage);
+        return APIResponse::error($this->getResultCode());
     }
 
 

@@ -34,19 +34,19 @@ class TenantServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
-              // publish config file
-              $this->publishes([
-                  __DIR__ . '/../../config/tenant.php' => "/../" . config_path('artisancloud/tenant.php'),
-              ], ['SaaSFramework', 'Tenant-Config']);
+            // publish config file
+            $this->publishes([
+                __DIR__ . '/../../config/tenant.php' => "/../" . config_path('artisancloud/tenant.php'),
+            ], ['ArtisanCloud', 'SaaSFramework', 'Tenant-Config']);
 
-              // register artisan command
-              if (! class_exists('CreateTenantTable')) {
+            // register artisan command
+            if (!class_exists('CreateTenantTable')) {
                 $this->publishes([
-                  __DIR__ . '/../../database/migrations/create_tenants_table.php' => database_path('migrations/2020_08_01_000030_create_tenants_table.php'),
-                  // you can add any number of migrations here
-                ], ['SaaSFramework', 'Tenant-Migration']);
-              }
+                    __DIR__ . '/../../database/migrations/create_tenants_table.php' => database_path('migrations/2020_08_01_000030_create_tenants_table.php'),
+                    // you can add any number of migrations here
+                ], ['ArtisanCloud', 'SaaSFramework', 'Tenant-Migration']);
             }
+        }
 
     }
 }

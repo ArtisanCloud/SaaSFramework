@@ -38,19 +38,19 @@ class LandlordServiceProvider extends ServiceProvider
         $this->configPassport();
 
         if ($this->app->runningInConsole()) {
-              // publish config file
-              $this->publishes([
-                  __DIR__ . '/../../config/landlord.php' => "/../" . config_path('artisancloud/landlord.php'),
-              ], ['SaaSFramework', 'Landlord-Config']);
+            // publish config file
+            $this->publishes([
+                __DIR__ . '/../../config/landlord.php' => "/../" . config_path('artisancloud/landlord.php'),
+            ], ['ArtisanCloud', 'SaaSFramework', 'Landlord-Config']);
 
-              // register artisan command
-              if (! class_exists('CreateLandlordTable')) {
+            // register artisan command
+            if (!class_exists('CreateLandlordTable')) {
                 $this->publishes([
-                  __DIR__ . '/../../database/migrations/create_landlords_table.php' => database_path('migrations/2020_08_01_000020_create_landlords_table.php'),
-                  // you can add any number of migrations here
-                ], ['SaaSFramework', 'Landlord-Migration']);
-              }
+                    __DIR__ . '/../../database/migrations/create_landlords_table.php' => database_path('migrations/2020_08_01_000020_create_landlords_table.php'),
+                    // you can add any number of migrations here
+                ], ['ArtisanCloud', 'SaaSFramework', 'Landlord-Migration']);
             }
+        }
 
     }
 

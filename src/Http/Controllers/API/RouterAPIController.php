@@ -57,9 +57,10 @@ class RouterAPIController extends APIController
 //        dump(\Auth::user());
 
         $server = $request->server();
-        $server['SERVER_NAME'] = env('APP_WHITE_LIST_URL');
-        $server['HTTP_HOST'] = env('APP_WHITE_LIST_URL');
+//        $server['SERVER_NAME'] = $request->getHost();
+//        $server['HTTP_HOST'] = $request->getHttpHost();
         $server['REQUEST_URI'] = $uri;
+//        dd($server);
         $req = $request->duplicate(null, null, null, null, null, $server);
         $req->setMethod($reqMethod);
 //        dump($req);
