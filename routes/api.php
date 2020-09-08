@@ -32,30 +32,6 @@ $_domain_tenant = config('artisancloud.framework.domain.tenant');
 /** Router **/
 Route::match($_methodAll, "api/{$_api_version}/", "{$_namespaceRouteAPI}\\RouterAPIController@index");
 
-/** Landlord **/
-Route::group(
-    [
-        'namespace' => $_namespaceAPI,
-        'prefix' => "api/{$_api_version}",
-        'domain' => $_domain_landlord,
-        'middleware' => ['checkHeader']
-    ], function ($router) use ($_methodGet, $_methodPost, $_methodPut, $_methodDelete) {
-
-    Route::match($_methodPost, 'invitation/generate', 'InvitationCodeAPIController@apiGenerateCode')->name('code.write.invitation.generate');
-});
-
-Route::group(
-    [
-        'namespace' => $_namespaceAPI,
-        'prefix' => "api/{$_api_version}",
-        'domain' => $_domain_landlord,
-        'middleware' => ['checkHeader', 'auth:api', 'checkUser']
-    ], function ($router) use ($_methodGet, $_methodPost, $_methodPut, $_methodDelete) {
-
-    
-});
-
-
 
 
 

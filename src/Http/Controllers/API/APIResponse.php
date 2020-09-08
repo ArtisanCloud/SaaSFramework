@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 
 namespace ArtisanCloud\SaaSFramework\Http\Controllers\API;
@@ -6,6 +7,7 @@ namespace ArtisanCloud\SaaSFramework\Http\Controllers\API;
 use ArtisanCloud\SaaSFramework\Models\ClientProfile;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class APIResponse implements Responsable
 {
@@ -15,7 +17,7 @@ class APIResponse implements Responsable
     private int $resultCode = 0;
     private string $resultMessage = '';
 
-    private ?array $data = [];
+    private $data = [];
 
     protected $m_module;
 
@@ -195,6 +197,28 @@ class APIResponse implements Responsable
     }
 
 
+
+    /**
+     * @inheritDoc
+     */
+    public function toResponse($request=null): JsonResponse
+    {
+        return $this->toJson();
+    }
+
+    /**
+     * Throw json response.
+     *
+     * @param null
+     * @return void
+     */
+    public function throwJSONResponse(): void
+    {
+        header('Content-Type: application/json');
+        echo $this->toResponse()->content();
+        exit();
+    }
+
     /**
      * Get locale message.
      *
@@ -212,26 +236,5 @@ class APIResponse implements Responsable
 //        dump($code,$strMessage);
 
         return $strMessage;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function toResponse($request): string
-    {
-        return $this->toJson();
-    }
-
-    /**
-     * Throw json response.
-     *
-     * @param null
-     * @return Response response
-     */
-    public function throwJSONResponse(): void
-    {
-        header('Content-Type: application/json');
-        echo $this->toResponse()->content();
-        exit();
     }
 }

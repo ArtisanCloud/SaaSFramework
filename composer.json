@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ArtisanCloud\\SaaSFramework\\": "src"
+            "ArtisanCloud\\SaaSFramework\\": "vendor/artisan-cloud/saas-framework/src"
         }
     },
     "require-dev": {

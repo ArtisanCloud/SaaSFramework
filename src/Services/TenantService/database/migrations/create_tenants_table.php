@@ -1,5 +1,7 @@
 <?php
+declare(strict_types=1);
 
+use ArtisanCloud\SaaSFramework\Models\ArtisanCloudModel;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -14,11 +16,14 @@ class CreateTenantsTable extends Migration
     public function up()
     {
         Schema::create('tenants', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('uuid')->primary();
 
-            $table->string('uuid')->unique()->index();
-            $table->string('app-domain')->unique()->index();
+            $table->string('name');
 
+            $table->string('domain')->unique()->index();
+
+            $table->tinyInteger('status')->default(ArtisanCloudModel::STATUS_INIT);
+            
             $table->timestamps();
         });
     }
