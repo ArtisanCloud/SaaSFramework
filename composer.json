@@ -15,10 +15,18 @@
     "autoload": {
         "psr-4": {
             "ArtisanCloud\\SaaSFramework\\": "vendor/artisan-cloud/saas-framework/src"
-        }
+        },
+        "files": ["vendor/artisan-cloud/saas-framework/src/Supports/helpers.php"]
     },
     "require-dev": {
         "phpunit/phpunit": "^9.2"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ArtisanCloud\\SaaSFramework\\Providers\\FrameworkServiceProvider"
+            ]
+        }
     }
 }
 
