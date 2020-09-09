@@ -108,7 +108,7 @@ class InvitationCodeService implements CodeServiceContract
         // 频率限制
         if (!$this->driver->canSend($this->throttles, $this->channel, $to, $type)) {
 //            throw new SendCodeTooManyTimesException();
-            throw new BaseException(API_ERR_CODE_VERIFY_CODE_REQUEST_DUPLICATED, null);
+            throw new BaseException(API_ERR_CODE_VERIFY_CODE_REQUEST_DUPLICATED, '');
         }
 
         $result = false;

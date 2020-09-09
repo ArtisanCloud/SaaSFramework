@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ArtisanCloud\SaaSFramework\Services;
 
 
+use ArtisanCloud\SaaSFramework\Models\ArtisanCloudModel;
 use Illuminate\Database\Query\Builder;
 
 class ArtisanCloudService
@@ -130,7 +131,7 @@ class ArtisanCloudService
      *
      * @param string $uuid
      *
-     * @return Model $detail
+     * @return ArtisanCloudModel $object
      */
     public function getDetailForClientByUUID($uuid)
     {

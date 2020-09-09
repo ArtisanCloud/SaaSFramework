@@ -18,12 +18,11 @@ class DatabaseDriver implements Driver
     /**
      * @param mixed $code
      * @param int $expires seconds
-     * @param Channel $channel
      * @param string $to
      * @param string $type
      * @return mixed
      */
-    function setCode($code, int $expires, Channel $channel, string $to, $type = '')
+    function setCode($code, int $expires, string $to, $type = '')
     {
         $mdlCode = Code::create([
             "code" => $code,
@@ -47,7 +46,7 @@ class DatabaseDriver implements Driver
         return $verifyCode ? $verifyCode->code : null;
     }
 
-    function canSend($throttles, Channel $channel, $to, $type = '')
+    function canSend($throttles, $to, $type = '')
     {
         return !Code::where('to', $to)
             ->where('status', Code::STATUS_NORMAL)
