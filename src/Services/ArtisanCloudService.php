@@ -29,9 +29,9 @@ class ArtisanCloudService
         return $this->m_model;
     }
 
-    public function createBy($arrayDate)
+    public function createBy($arrayData)
     {
-        $model = $this->makeBy($arrayDate);
+        $model = $this->makeBy($arrayData);
 
         $bResult = $model->save();
 
@@ -149,9 +149,9 @@ class ArtisanCloudService
      */
     public function getDetailForClientByUUID($uuid)
     {
-        $detail = $this->where([
+        $detail = $this->m_model->where([
             'uuid' => $uuid,
-            'status' => $this::STATUS_NORMAL,
+            'status' => $this->m_model::STATUS_NORMAL,
         ])->first();
 
         return $detail;
@@ -168,7 +168,7 @@ class ArtisanCloudService
      */
     public function getDetailByUUID($uuid)
     {
-        $detail = $this->where([
+        $detail = $this->m_model->where([
             'uuid' => $uuid,
         ])->first();
 

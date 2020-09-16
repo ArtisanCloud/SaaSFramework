@@ -46,7 +46,6 @@ class CacheDriver implements Driver
 
     protected function getCacheKey(string $to, $type)
     {
-//        dd("verify-code:" . $type . ":" . $to->getCodeAddress($channel));
         return "verify-code:" . $type . ":" . $to;
     }
 

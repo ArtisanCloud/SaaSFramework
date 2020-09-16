@@ -23,13 +23,18 @@ class BaseException extends Exception
 
     public function render($request)
     {
-        return APIResponse::error($this->getResultCode());
+        return APIResponse::error($this->getResultCode(), $this->getResultMessage());
     }
 
 
     function getResultCode()
     {
         return $this->getCode();
+    }
+
+    function getResultMessage()
+    {
+        return $this->getMessage();
     }
 
 

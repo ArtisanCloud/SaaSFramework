@@ -87,7 +87,7 @@ class InvitationCodeService implements CodeServiceContract
         // 生成邀请码
         $code = $codeGenerator->getCode($options);
         // 储存验证码
-        if (!$this->driver->setCode($code, $expires, $this->channel, $to, $type)) {
+        if (!$this->driver->setCode($code, $expires, $to, $type)) {
             return false;
         }
 
@@ -106,7 +106,7 @@ class InvitationCodeService implements CodeServiceContract
     function sendCode(CodeGenerator $codeGenerator, string $to, $type = '', $expires = 300, array $options = []) : bool
     {
         // 频率限制
-        if (!$this->driver->canSend($this->throttles, $this->channel, $to, $type)) {
+        if (!$this->driver->canSend($this->throttles, $to, $type)) {
 //            throw new SendCodeTooManyTimesException();
             throw new BaseException(API_ERR_CODE_VERIFY_CODE_REQUEST_DUPLICATED, '');
         }

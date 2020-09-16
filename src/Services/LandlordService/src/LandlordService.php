@@ -18,7 +18,6 @@ class LandlordService extends ArtisanCloudService implements LandlordServiceCont
     public function __construct()
     {
         parent::__construct();
-
         $this->m_model = new Landlord();
     }
 

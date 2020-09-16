@@ -6,6 +6,7 @@ namespace ArtisanCloud\SaaSFramework\Http\Requests;
 use ArtisanCloud\SaaSFramework\Http\Controllers\API\APIResponse;
 use ArtisanCloud\SaaSFramework\Models\ClientProfile;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class RequestBasic extends FormRequest
 {
@@ -63,22 +64,20 @@ class RequestBasic extends FormRequest
 
         $validator->after(function ($validator) {
 
-
+            $arrayTransformedKeys = $this->transformKeys($this->all());
+//            dd($arrayTransformedKeys);
+            $this->replace($arrayTransformedKeys);
         });
+        
+    }
 
-//        $validator->extend('not_exists', function ($attribute, $value, $parameters) use ($validator) {
-//            //this is opposite of using `exists` rule, so we use exists
-//            //but when it fails, it returns true! [simple solution!]
-//            $v = $validator->make(
-//                [
-//                    $attribute => $value
-//                ],
-//                [
-//                    $attribute => "exists:" . implode(",", $parameters)
-//                ]
-//            );
-//            return $v->fails();
-//        });
+    private function transformKeys(array $data)
+    {
+        $arrayTransformedKeys = [];
+        foreach ($data as $key => $value) {
+            $arrayTransformedKeys[Str::snake($key)] = $value;
+        }
+        return $arrayTransformedKeys;
     }
 
 
