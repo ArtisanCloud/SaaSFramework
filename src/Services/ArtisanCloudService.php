@@ -24,6 +24,20 @@ class ArtisanCloudService
         return $Class::where($key, $value)->first();
     }
 
+    public function makeBy($arrayData)
+    {
+        return $this->m_model;
+    }
+
+    public function createBy($arrayDate)
+    {
+        $model = $this->makeBy($arrayDate);
+
+        $bResult = $model->save();
+
+        return $bResult ? $model : null;
+    }
+
     /**
      * Get list Builder or Pagination  normal query.
      *

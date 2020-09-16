@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ArtisanCloud\SaaSFramework\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Arr;
@@ -13,6 +14,8 @@ use Illuminate\Support\Str;
 
 class ArtisanCloudModel extends Model
 {
+    use HasFactory;
+    
     const TABLE_NAME = '';
 
     const STATUS_INIT = 0;          // init
