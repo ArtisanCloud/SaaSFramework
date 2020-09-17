@@ -182,10 +182,10 @@ class APIResponse implements Responsable
     {
         $response = [
             'meta' => [
-                'return_code' => $this->returnCode,
-                'return_message' => $this->returnMessage,
-                'result_code' => $this->resultCode,
-                'result_message' => $this->resultMessage,
+                'returnCode' => $this->returnCode,
+                'returnMessage' => $this->returnMessage,
+                'resultCode' => $this->resultCode,
+                'resultMessage' => $this->resultMessage,
                 'timezone' => ClientProfile::TIMEZONE,
                 'locale' => ClientProfile::getSessionLocale(),
             ],

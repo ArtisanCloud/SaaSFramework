@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\APIToken;
 
 use App\Services\SalesforceService\Database\SalesforceEloquentFactory;
+use Illuminate\Support\Str;
 
 /*  security
 **---***---***---***---***---***---***---***---***---***---**
@@ -211,47 +212,60 @@ if (! function_exists('guid')) {
 }
 
 
-if (! function_exists('getOutTradeNO')) {
+if (! function_exists('transformKeysToSnake')) {
     /**
-     * Create a Global Unque ID
+     * Transform Array Keys to Snake format
      *
      * @param  string $mx
      * @return strID
      */
-    function getOutTradeNO($uuid)
+    function transformKeysToSnake(array $arrayData)
     {
-        Str:
-
-    }
-
-}
-
-
-/*  Database
-**---***---***---***---***---***---***---***---***---***---**
-*/
-if (! function_exists('SalesforceFactory')) {
-    /**
-     * Create a model factory builder for a given class, name, and amount.
-     *
-     * @param  dynamic  class|class,name|class,amount|class,name,amount
-     * @return \Illuminate\Database\Eloquent\FactoryBuilder
-     */
-    function SalesforceFactory()
-    {
-        $factory = app(SalesforceEloquentFactory::class);
-
-        $arguments = func_get_args();
-
-        if (isset($arguments[1]) && is_string($arguments[1])) {
-            return $factory->of($arguments[0], $arguments[1])->times($arguments[2] ?? null);
-        } elseif (isset($arguments[1])) {
-            return $factory->of($arguments[0])->times($arguments[1]);
+        $arrayTransformedKeys = [];
+        foreach ($data as $key => $value) {
+            $arrayTransformedKeys[Str::snake($key)] = $value;
         }
-
-        return $factory->of($arguments[0]);
+        return $arrayTransformedKeys;
     }
+
 }
+
+if (! function_exists('transformArrayKeysToSnake')) {
+    /**
+     * Transform Array Keys to Snake format
+     *
+     * @param  string $mx
+     * @return strID
+     */
+    function transformArrayKeysToSnake(array $arrayData)
+    {
+        $arrayTransformedKeys = [];
+        foreach ($arrayData as $key => $value) {
+            $arrayTransformedKeys[Str::snake($key)] = $value;
+        }
+        return $arrayTransformedKeys;
+    }
+
+}
+
+if (! function_exists('transformArrayKeysToCamel')) {
+    /**
+     * Transform Array Keys to Camel format
+     *
+     * @param  string $mx
+     * @return strID
+     */
+    function transformArrayKeysToCamel(array $arrayData)
+    {
+        $arrayTransformedKeys = [];
+        foreach ($arrayData as $key => $value) {
+            $arrayTransformedKeys[Str::camel($key)] = $value;
+        }
+        return $arrayTransformedKeys;
+    }
+
+}
+
 
 
 

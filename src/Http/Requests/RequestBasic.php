@@ -64,21 +64,14 @@ class RequestBasic extends FormRequest
 
         $validator->after(function ($validator) {
 
-            $arrayTransformedKeys = $this->transformKeys($this->all());
+            $arrayTransformedKeys = transformArrayKeysToSnake($this->all());
 //            dd($arrayTransformedKeys);
             $this->replace($arrayTransformedKeys);
         });
         
     }
 
-    private function transformKeys(array $data)
-    {
-        $arrayTransformedKeys = [];
-        foreach ($data as $key => $value) {
-            $arrayTransformedKeys[Str::snake($key)] = $value;
-        }
-        return $arrayTransformedKeys;
-    }
+
 
 
 }
