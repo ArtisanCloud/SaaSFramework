@@ -44,7 +44,7 @@ class LandServiceProvider extends ServiceProvider
               // register artisan command
               if (! class_exists('CreateLandTable')) {
                 $this->publishes([
-                  __DIR__ . '/../../database/migrations/create_lands_table.php' => database_path('migrations/2020_08_01_000010_create_lands_table.php'),
+                  __DIR__ . '/../../database/migrations/create_lands_table.php' => database_path('migrations/0_0_0_0_create_lands_table.php'),
                   // you can add any number of migrations here
                 ], ['ArtisanCloud','SaaSFramework', 'Land-Migration']);
               }
