@@ -16,7 +16,7 @@ class ArtisanCloudService
 
     public function __construct()
     {
-
+        
     }
 
     public static function GetBy($Class, $key, $value)

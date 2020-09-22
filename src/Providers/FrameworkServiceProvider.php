@@ -30,6 +30,7 @@ class FrameworkServiceProvider extends ServiceProvider
         $this->app->register(LandlordServiceProvider::class);
         $this->app->register(TenantServiceProvider::class);
         $this->app->register(CodeServiceProvider::class);
+
     }
 
     /**
