@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace ArtisanCloud\SaaSFramework\Http\Middleware;;
 
 use ArtisanCloud\SaaSFramework\Http\Controllers\API\APIResponse;
 use App\Services\UserService;

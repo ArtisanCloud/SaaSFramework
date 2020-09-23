@@ -27,17 +27,6 @@
     "laravel": {
       "providers": [
         "ArtisanCloud\\SaaSFramework\\Providers\\FrameworkServiceProvider"
-      ],
-      "aliases": [
-        {
-          "checkHeader": "ArtisanCloud\\SaaSFramework\\Http\\Middleware\\CheckHeader::class"
-        },
-        {
-          "checkUser": "ArtisanCloud\\SaaSFramework\\Http\\Middleware\\CheckUser::class"
-        },
-        {
-          "checkClientHavingUser": "ArtisanCloud\\SaaSFrameworkHttp\\Middleware\\CheckClientHavingUser::class"
-        }
       ]
     }
   }
