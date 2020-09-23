@@ -26,15 +26,13 @@ class ArtisanCloudService
 
     public function makeBy($arrayData)
     {
-        return $this->m_model;
+        $this->m_model = $this->m_model->firstOrNew($arrayData);
+        return $bResult ? $model : null;
     }
 
     public function createBy($arrayData)
     {
-        $model = $this->makeBy($arrayData);
-
-        $bResult = $model->save();
-
+        $this->m_model = $this->m_model->create($arrayData);
         return $bResult ? $model : null;
     }
 

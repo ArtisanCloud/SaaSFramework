@@ -49,5 +49,14 @@ class FrameworkServiceProvider extends ServiceProvider
             ], ['ArtisanCloud', 'SaaSFramework', 'Landlord-Config']);
         }
 
+        // config search path for pprtgres
+        $this->configPostgresSearchPath();
+
+    }
+
+    public function configPostgresSearchPath()
+    {
+        $searchPath = config('database.connections.pgsql.search_path');
+        \DB::connection('pgsql')->statement("SET search_path TO {$searchPath}");
     }
 }

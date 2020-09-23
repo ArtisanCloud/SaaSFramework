@@ -17,11 +17,7 @@ class TenantMigration extends Migration
     {
         $this->schema = Schema::connection('tenant')->getConnection()->getSchemaBuilder();
 //        dd($this->schema);
-//        if (app()->environment() != 'local') {
-//            $searchPath = config('database.connections.pgsql.search_path');
-//            \DB::connection('tenant')->statement("SET search_path TO {$searchPath}");
-//        }
-
+        
     }
 
     /**
@@ -41,7 +37,7 @@ class TenantMigration extends Migration
      */
     public function down()
     {
-        dump($this->table);
+//        dump($this->table);
         $this->schema->dropIfExists($this->table);
 //        if (app()->environment('local')) {
 //            $this->schema->dropIfExists($this->table);

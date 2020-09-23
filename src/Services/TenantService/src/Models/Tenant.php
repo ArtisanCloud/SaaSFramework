@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 class Tenant extends ArtisanCloudModel
 {
     protected $connection = 'tenant';
-
+    const TABLE_NAME = '';
+    protected $table = self::TABLE_NAME;
 
 }
