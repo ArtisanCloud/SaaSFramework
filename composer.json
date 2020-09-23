@@ -30,7 +30,7 @@
       ],
       "aliases": [
         {
-          "checkHeader": "ArtisanCloud\\SaaSFramework\\Http\\Middleware\\CheckHeader"
+          "checkHeader": "ArtisanCloud\\SaaSFramework\\Http\\Middleware\\CheckHeader::class"
         },
         {
           "checkUser": "ArtisanCloud\\SaaSFramework\\Http\\Middleware\\CheckUser::class"
