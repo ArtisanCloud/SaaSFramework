@@ -212,24 +212,6 @@ if (! function_exists('guid')) {
 }
 
 
-if (! function_exists('transformKeysToSnake')) {
-    /**
-     * Transform Array Keys to Snake format
-     *
-     * @param  string $mx
-     * @return strID
-     */
-    function transformKeysToSnake(array $arrayData)
-    {
-        $arrayTransformedKeys = [];
-        foreach ($data as $key => $value) {
-            $arrayTransformedKeys[Str::snake($key)] = $value;
-        }
-        return $arrayTransformedKeys;
-    }
-
-}
-
 if (! function_exists('transformArrayKeysToSnake')) {
     /**
      * Transform Array Keys to Snake format
@@ -241,6 +223,9 @@ if (! function_exists('transformArrayKeysToSnake')) {
     {
         $arrayTransformedKeys = [];
         foreach ($arrayData as $key => $value) {
+            if(is_array($value)){
+                $value = transformArrayKeysToSnake($value);
+            }
             $arrayTransformedKeys[Str::snake($key)] = $value;
         }
         return $arrayTransformedKeys;
@@ -259,6 +244,9 @@ if (! function_exists('transformArrayKeysToCamel')) {
     {
         $arrayTransformedKeys = [];
         foreach ($arrayData as $key => $value) {
+            if(is_array($value)){
+                $value = transformArrayKeysToCamel($value);
+            }
             $arrayTransformedKeys[Str::camel($key)] = $value;
         }
         return $arrayTransformedKeys;

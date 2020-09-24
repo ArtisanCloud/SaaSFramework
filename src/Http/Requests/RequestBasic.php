@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace ArtisanCloud\SaaSFramework\Http\Requests;
 
+use App\Services\UserService\UserService;
 use ArtisanCloud\SaaSFramework\Http\Controllers\API\APIResponse;
 use ArtisanCloud\SaaSFramework\Models\ClientProfile;
+use ArtisanCloud\SaaSFramework\Services\ArtisanCloudService;
+use ArtisanCloud\SaaSFramework\Services\LandlordService\src\LandlordService;
+use ArtisanCloud\SaaSPolymer\Services\ArtisanService\src\ArtisanService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
@@ -65,13 +69,15 @@ class RequestBasic extends FormRequest
         $validator->after(function ($validator) {
 
             $arrayTransformedKeys = transformArrayKeysToSnake($this->all());
+
+            $arraySession = ArtisanCloudService::getSessions();
+            $arrayTransformedKeys = array_merge($arrayTransformedKeys, $arraySession);
 //            dd($arrayTransformedKeys);
+
             $this->replace($arrayTransformedKeys);
         });
-        
+
     }
-
-
 
 
 }

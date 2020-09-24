@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ArtisanCloud\SaaSFramework\Models;
 
+use ArtisanCloud\SaaSFramework\Traits\Cacheable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +16,7 @@ use Illuminate\Support\Str;
 
 class ArtisanCloudModel extends Model
 {
-    use HasFactory, Taggable;
+    use HasFactory,Cacheable, Taggable;
     
     const TABLE_NAME = '';
 

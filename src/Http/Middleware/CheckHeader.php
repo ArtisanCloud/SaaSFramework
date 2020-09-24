@@ -49,7 +49,7 @@ class CheckHeader
         $channel = $request->header('channel');
         $uuid = $request->header('uuid');
 
-//        $account = (new Account())->getCachedDetailForClientByID($channel);
+//        $account = (new Account())->getCachedModelForClientByID($channel);
 //        dd($account);
 
         if (!$platform || !in_array($platform, ClientProfile::ARRAY_PLATFORM)) {
@@ -68,8 +68,7 @@ class CheckHeader
             // we can log here and check where access our server with invalid request
             return $apiResponse->toJson();
         }
-
-
+        
         return $next($request);
     }
 }
