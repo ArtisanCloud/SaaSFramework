@@ -70,7 +70,7 @@ class RequestBasic extends FormRequest
 
             $arrayTransformedKeys = transformArrayKeysToSnake($this->all());
 
-            $arraySession = ArtisanCloudService::getSessions();
+            $arraySession = ArtisanCloudService::getSessionUUIDs();
             $arrayTransformedKeys = array_merge($arrayTransformedKeys, $arraySession);
 //            dd($arrayTransformedKeys);
 

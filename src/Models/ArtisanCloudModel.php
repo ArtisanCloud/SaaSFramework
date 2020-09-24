@@ -16,8 +16,8 @@ use Illuminate\Support\Str;
 
 class ArtisanCloudModel extends Model
 {
-    use HasFactory,Cacheable, Taggable;
-    
+    use HasFactory, Cacheable, Taggable;
+
     const TABLE_NAME = '';
 
     const STATUS_INIT = 0;          // init
@@ -43,7 +43,30 @@ class ArtisanCloudModel extends Model
         });
     }
 
+    /**--------------------------------------------------------------- schema functions  -------------------------------------------------------------*/
+    public static function getPrimaryKeyName()
+    {
+        return (new self())->getKeyName();
+    }
 
+    public static function getConnectionNameStatic()
+    {
+        return (new self())->getConnectionName();
+    }
+
+    public function getForeignKey()
+    {
+        return $this->getTransformForeignKey(Str::snake(class_basename($this)));
+    }
+
+    public function getTransformForeignKey($key)
+    {
+        return $key . '_' . $this->getKeyName();
+    }
+
+
+
+    /**--------------------------------------------------------------- condition functions  -------------------------------------------------------------*/
     public function scopeWhereIsActive($query)
     {
         return $query->where('status', $this::STATUS_NORMAL);

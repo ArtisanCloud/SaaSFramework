@@ -10,6 +10,7 @@ use ArtisanCloud\SaaSFramework\Services\LandlordService\src\LandlordService;
 use ArtisanCloud\SaaSFramework\Traits\CacheTimeout;
 use ArtisanCloud\SaaSPolymer\Services\ArtisanService\src\ArtisanService;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class ArtisanCloudService
@@ -28,19 +29,50 @@ class ArtisanCloudService
     /**
      * Get session.
      *
-     * @return array $arraySession
+     * @return array
      */
-    public static function getSessions() : array
+    public static function getSessions(): array
     {
         $artisan = ArtisanService::getAuthArtisan();
         $landlord = LandlordService::getSessionLandlord();
         $user = UserService::getAuthUser();
-        $arraySession['artisan_uuid'] = $artisan ? $artisan->uuid : null;
-        $arraySession['landlord_uuid'] = $landlord ? $landlord->uuid : null;
-        $arraySession['user_uuid'] = $user ? $user->uuid : null;
+        $arraySession['artisan'] = $artisan;
+        $arraySession['landlord'] = $landlord;
+        $arraySession['user'] = $user;
 
         return $arraySession;
     }
+
+    /**
+     * Get session UUIDs.
+     *
+     * @return array
+     */
+    public static function getSessionUUIDs(): array
+    {
+        $arraySession = static::getSessions();
+        $arraySessionUUIDs['artisan_uuid'] = $arraySession['artisan'] ? $arraySession['artisan']->uuid : null;
+        $arraySessionUUIDs['landlord_uuid'] = $arraySession['landlord'] ? $arraySession['landlord']->uuid : null;
+        $arraySessionUUIDs['user_uuid'] = $arraySession['user'] ? $arraySession['user']->uuid : null;
+
+        return $arraySessionUUIDs;
+    }
+
+
+    public function makeBy($arrayData)
+    {
+        $this->m_model = $this->m_model->firstOrNew($arrayData);
+        return $this->m_model;
+    }
+
+    public function createBy($arrayData)
+    {
+        $this->m_model = $this->makeBy($arrayData);
+        $bResult = $this->m_model->save();
+
+        return $bResult ? $this->m_model : null;
+    }
+
 
     /**
      * Get model ArtisanCloudModel by key.
@@ -53,6 +85,130 @@ class ArtisanCloudService
     {
         return $Class::where($whereConditions)->first();
     }
+
+    /**
+     * Get list Builder or Pagination  normal query.
+     *
+     * @param array $_arrayConditions
+     * @param int $_page
+     * @param int $_perPage
+     *
+     * @return mixed $listBuilder
+     */
+    public function getList(array $_arrayConditions = [],
+                            ?int $_page = NULL,
+                            ?int $_perPage = null)
+    {
+//        dd(request('page'), request('perPage'));
+
+        $_page = $_page ?? (request('page') ?? self::PAGE_DEFAULT);
+        $_perPage = $_perPage ?? (request('perPage') ?? self::PER_PAGE_DEFAULT);
+//        dd($_page, $_perPage);
+
+        $qb = $this->m_model->select('*');
+
+//        dd($qb->toSql());
+//        dump($_perPage, $_page);
+
+        return $qb->limit($_perPage)->offset(($_page - 1) * $_perPage);
+
+    }
+
+    /**
+     * Get list Builder from client request for normal query.
+     * The function could be override by sub class for specific query.
+     *
+     * @param array $para
+     *
+     * @return mixed $listBuilder
+     */
+    public function getListForClient($para = [])
+    {
+        $page = $para['page'] ?? null;
+        $perPage = $para['perPage'] ?? null;
+
+        $listBuilder = $this->getList($para, $page, $perPage)->whereIsActive();
+//        dd($listBuilder);
+        return $listBuilder;
+    }
+
+    /**
+     * Get Model Builder from client request for normal query.
+     *
+     * @param string $uuid
+     *
+     * @return ArtisanCloudModel $object
+     */
+    public function getModelForClientByUUID(string $uuid)
+    {
+        $model = $this
+            ->getModelsForClientByUUIDs([$uuid])
+            ->first();
+
+        return $model;
+    }
+
+    /**
+     * Get Models Builder from client request for normal query.
+     *
+     * @param array $uuids
+     *
+     * @return Collection
+     */
+    public function getModelsForClientByUUIDs(array $uuids): Collection
+    {
+        $models = $this->m_model
+            ->whereIn('uuid', $uuids)
+            ->where('status', $this->m_model::STATUS_NORMAL);
+
+        return $models;
+    }
+
+
+    /**
+     * Get Model.
+     *
+     * @param string $uuid
+     *
+     * @return Model $model
+     */
+    public function getModelByUUID(string $uuid)
+    {
+        $model = $this->getModelsByUUIDs([$uuid])->first();
+
+        return $model;
+    }
+
+    /**
+     * Get Model Builder.
+     *
+     * @param string $uuid
+     *
+     * @return Collection
+     */
+    public function getModelsByUUIDs(array $uuids)
+    {
+        $models = $this->m_model->whereIn('uuid', $uuids);
+
+        return $models;
+    }
+
+
+    /**--------------------------------------------------------------- Cache Query  -------------------------------------------------------------*/
+    /**
+     * Get Cached Model Builder from client request for normal query.
+     *
+     * @param string $uuid
+     *
+     * @return ArtisanCloudModel $cachedModel
+     */
+    public function getCachedModelForClientByUUID($uuid)
+    {
+        $cachedModel = $this->getCachedModelForClientByKey('uuid', $uuid);
+
+        return $cachedModel;
+    }
+
 
     /**
      * Get cached model ArtisanCloudModel by key.
@@ -85,67 +241,6 @@ class ArtisanCloudService
         return $cachedModel;
     }
 
-    public function makeBy($arrayData)
-    {
-        $this->m_model = $this->m_model->firstOrNew($arrayData);
-        return $this->m_model;
-    }
-
-    public function createBy($arrayData)
-    {
-        $this->m_model = $this->makeBy($arrayData);
-        $bResult = $this->m_model->save();
-
-        return $bResult ? $this->m_model : null;
-    }
-
-    /**
-     * Get list Builder or Pagination  normal query.
-     *
-     * @param array $_arrayConditions
-     * @param int $_page
-     * @param int $_perPage
-     *
-     * @return mixed $listBuilder
-     */
-    public function getList(array $_arrayConditions = [],
-                            ?int $_page = NULL,
-                            ?int $_perPage = null)
-    {
-//        dd(request('page'), request('perPage'));
-
-        $_page = $_page ?? (request('page') ?? self::PAGE_DEFAULT);
-        $_perPage = $_perPage ?? (request('perPage') ?? self::PER_PAGE_DEFAULT);
-//        dd($_page, $_perPage);
-
-//        dd($this->m_model);
-        $qb = $this->m_model->select('*');
-
-//        dd($qb->toSql());
-//        dump($_perPage, $_page);
-
-        return $qb->limit($_perPage)->offset(($_page - 1) * $_perPage);
-
-    }
-
-    /**
-     * Get list Builder from client request for normal query.
-     * The function could be override by sub class for specific query.
-     *
-     * @param array $para
-     *
-     * @return mixed $listBuilder
-     */
-    public function getListForClient($para = [])
-    {
-        $page = $para['page'] ?? null;
-        $perPage = $para['perPage'] ?? null;
-
-        $listBuilder = $this->getList($para, $page, $perPage)->whereIsActive();
-//        dd($listBuilder);
-        return $listBuilder;
-    }
-
 
     /**
      * Get cached list from client request for normal query.
@@ -157,8 +252,8 @@ class ArtisanCloudService
      */
     public function getCachedListForClient($para)
     {
-        $cacheTag = $this->getCacheTag();
-        $cacheKey = $this->getListCacheKey($para['page'], $para['perPage']);
+        $cacheTag = $this->m_model->getCacheTag();
+        $cacheKey = $this->m_model->getListCacheKey($para['page'], $para['perPage']);
 //        dd($cacheTag, $cacheKey);
         $cachedList = Cache::tags($cacheTag)->remember($cacheKey, SYSTEM_CACHE_TIMEOUT, function () use ($para) {
 
@@ -171,66 +266,6 @@ class ArtisanCloudService
 
         return $cachedList;
 
-    }
-
-
-    /**
-     * Get Cached Model Builder from client request for normal query.
-     *
-     * @param string $uuid
-     *
-     * @return Product $cachedModel
-     */
-    public function getCachedModelForClientByUUID($uuid)
-    {
-        $cacheTag = $this->getCacheTag();
-        $cacheKey = $this->getItemCacheKey($uuid);
-//        dd($cacheTag, $cacheKey);
-        $cachedModel = Cache::tags($cacheTag)->remember($cacheKey, SYSTEM_CACHE_TIMEOUT, function () use ($uuid) {
-
-            $this->logLocal('info', "request " . class_basename($this) . " model here, uuid:{$uuid} .");
-
-            $detail = $this->getModelForClientByUUID($uuid);
-
-            return $detail;
-        });
-
-        return $cachedModel;
-    }
-
-
-    /**
-     * Get Model Builder from client request for normal query.
-     *
-     * @param string $uuid
-     *
-     * @return ArtisanCloudModel $object
-     */
-    public function getModelForClientByUUID($uuid)
-    {
-        $detail = $this->m_model->where([
-            'uuid' => $uuid,
-            'status' => $this->m_model::STATUS_NORMAL,
-        ])->first();
-
-        return $detail;
-    }
-
-
-    /**
-     * Get Model Builder from any request for normal query.
-     *
-     * @param string $uuid
-     *
-     * @return Model $detail
-     */
-    public function getModelByUUID($uuid)
-    {
-        $detail = $this->m_model->where([
-            'uuid' => $uuid,
-        ])->first();
-
-        return $detail;
     }
 
 
