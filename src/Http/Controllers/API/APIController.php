@@ -31,11 +31,14 @@ class APIController extends Controller
     }
 
 
-    public function userOwns($model): bool
+    public function checkUserOwnsResource($model): void
     {
         $user = UserService::getAuthUser();
-
-        return $user->can('owns', $model);
+        if($user->cant('owns', $model)){
+            $this->m_apiResponse->setCode(API_ERR_CODE_USER_DOES_NOT_OWN_RESOURCE);
+            $this->m_apiResponse->throwJSONResponse();
+        }
+        
     }
 
 

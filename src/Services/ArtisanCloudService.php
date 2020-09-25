@@ -79,11 +79,48 @@ class ArtisanCloudService
      *
      * @param array $whereConditions
      *
-     * @return ArtisanCloudModel $cachedModel
+     * @return mixed
      */
     public static function GetBy($Class, array $whereConditions)
     {
-        return $Class::where($whereConditions)->first();
+        return static::GetItemsBy($Class, $whereConditions)->first();
+    }
+
+    /**
+     * Get models ArtisanCloudModel by key.
+     *
+     * @param array $whereConditions
+     *
+     * @return Builder
+     */
+    public static function GetItemsBy($Class, array $whereConditions)
+    {
+        return $Class::where($whereConditions);
+    }
+
+    /**
+     * Get model ArtisanCloudModel for client by key.
+     *
+     * @param array $whereConditions
+     *
+     * @return mixed
+     */
+    public static function GetForClientBy($Class, array $whereConditions)
+    {
+        return static::GetItemsForClientBy($Class, $whereConditions)->first();
+    }
+
+    /**
+     * Get models ArtisanCloudModel for client by key.
+     *
+     * @param array $whereConditions
+     *
+     * @return Builder
+     */
+    public static function GetItemsForClientBy($Class, array $whereConditions)
+    {
+        return $Class::where($whereConditions)
+            ->whereIsActive();
     }
 
     /**
@@ -194,6 +231,46 @@ class ArtisanCloudService
     }
 
 
+    /**
+     * Get children tree list with item id and specified the level count
+     *
+     * @param mixed $parent
+     * @param int $status
+     * @param int $level
+     *
+     * @return mixed
+     */
+    function getTreeList($parent = NULL, int $status = NULL, int $level = 3): ?array
+    {
+//    d($parentID);
+        if ($level < 0) {
+            return NULL;
+        } else {
+            $level = $level - 1;
+        }
+
+        $arrayModel = array();
+        $qb = self::GetItemsBy(
+            get_class($parent),
+            ['parent_uuid' => ($parent ? $parent->uuid : null)]
+        );
+        if (is_null($status)) $qb->whereStatus($status);
+        $collectionModel = $qb->get();
+//    	dump($collectionChildren);
+
+        foreach ($collectionModel as $key => $model) {
+//      		dump($model);
+
+            $arrayChildren = $this->getTreeList($model, $status, $level);
+            if (!is_null($arrayChildren)) {
+                $model['children'] = $arrayChildren;
+            }
+            array_push($arrayModel, $model);
+        }
+        return $arrayModel;
+    }
+
+
     /**--------------------------------------------------------------- Cache Query  -------------------------------------------------------------*/
     /**
      * Get Cached Model Builder from client request for normal query.
@@ -255,7 +332,7 @@ class ArtisanCloudService
         $cacheTag = $this->m_model->getCacheTag();
         $cacheKey = $this->m_model->getListCacheKey($para['page'], $para['perPage']);
 //        dd($cacheTag, $cacheKey);
-        $cachedList = Cache::tags($cacheTag)->remember($cacheKey, SYSTEM_CACHE_TIMEOUT, function () use ($para) {
+        $cachedList = Cache::tags($cacheTag)->remember($cacheKey, CacheTimeout::CACHE_TIMEOUT_MONTH, function () use ($para) {
 
             $this->logLocal('info', "request " . class_basename($this) . " list here page:{$para['page']}, perPage:{$para['perPage']}");
 
@@ -268,5 +345,29 @@ class ArtisanCloudService
 
     }
 
+    /**
+     * Get cached children tree list with item id and specified the level count
+     *
+     * @param mixed $parent
+     * @param int $status
+     * @param int $level
+     *
+     * @return mixed
+     */
+    function getCachedTreeList($parent = NULL, int $status = NULL, int $level = 3): ?array
+    {
+        $cacheTag = $this->m_model->getCacheTag();
+        $cacheKey = $this->m_model->getItemCacheKey($parent->uuid . '.children');
+//        dd($cacheTag, $cacheKey, CacheTimeout::CACHE_TIMEOUT_MONTH);
+        $cachedList = Cache::tags($cacheTag)->remember($cacheKey, CacheTimeout::CACHE_TIMEOUT_MONTH, function () use ($parent, $status, $level) {
+
+            \Log::info("request " . class_basename($parent).":{$parent->uuid} tree list here status:{$status}, level:{$level}");
+            $list = $this->getTreeList($parent, $status, $level);
+
+            return $list;
+        });
+
+        return $cachedList;
+    }
 
 }
