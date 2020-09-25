@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace ArtisanCloud\SaaSFramework\Http\Controllers\API;
 
+use App\Models\User;
 use App\Services\UserService\UserService;
+use ArtisanCloud\SaaSFramework\Services\ArtisanCloudService;
+use ArtisanCloud\SaaSFramework\Services\LandlordService\src\Models\Landlord;
+use ArtisanCloud\SaaSPolymer\Services\ArtisanService\src\Models\Artisan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -17,6 +21,7 @@ class APIController extends Controller
     const TIME_FORMAT = "H:i:s";
 
     public APIResponse $m_apiResponse;
+    
 
     /**
      * Constructor.
@@ -34,7 +39,7 @@ class APIController extends Controller
     public function checkUserOwnsResource($model): void
     {
         $user = UserService::getAuthUser();
-        if($user->cant('owns', $model)){
+        if($user->cant('owns', $model) || $user->cant('owns', $model)){
             $this->m_apiResponse->setCode(API_ERR_CODE_USER_DOES_NOT_OWN_RESOURCE);
             $this->m_apiResponse->throwJSONResponse();
         }

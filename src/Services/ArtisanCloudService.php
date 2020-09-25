@@ -27,6 +27,26 @@ class ArtisanCloudService
     }
 
     /**
+     * Set model.
+     *
+     * @return void
+     */
+    public function setModel($model)
+    {
+        $this->m_model = $model;
+    }
+
+    /**
+     * Get model.
+     *
+     * @return mixed
+     */
+    public function getModel()
+    {
+        return $this->m_model;
+    }
+
+    /**
      * Get session.
      *
      * @return array
@@ -34,11 +54,11 @@ class ArtisanCloudService
     public static function getSessions(): array
     {
         $artisan = ArtisanService::getAuthArtisan();
-        $landlord = LandlordService::getSessionLandlord();
         $user = UserService::getAuthUser();
+        $landlord = LandlordService::getSessionLandlord();
         $arraySession['artisan'] = $artisan;
-        $arraySession['landlord'] = $landlord;
         $arraySession['user'] = $user;
+        $arraySession['landlord'] = $landlord;
 
         return $arraySession;
     }
@@ -236,19 +256,22 @@ class ArtisanCloudService
      *
      * @param mixed $parent
      * @param int $status
+     * @param array $attributes
      * @param int $level
      *
      * @return mixed
      */
-    function getTreeList($parent = NULL, int $status = NULL, int $level = 3): ?array
+    function getTreeList($parent = NULL, int $status = NULL, array $attributes, int $level = 5): ?array
     {
-//    d($parentID);
+        // level counter --
         if ($level < 0) {
             return NULL;
         } else {
             $level = $level - 1;
         }
 
+
+        // get parent node's children nodes
         $arrayModel = array();
         $qb = self::GetItemsBy(
             get_class($parent),
@@ -258,13 +281,13 @@ class ArtisanCloudService
         $collectionModel = $qb->get();
 //    	dump($collectionChildren);
 
+
+        // iterate children node with sub-children nodes
         foreach ($collectionModel as $key => $model) {
 //      		dump($model);
+            $model->load($attributes);
+            $model->children = $this->getTreeList($model, $status, $attributes, $level);
 
-            $arrayChildren = $this->getTreeList($model, $status, $level);
-            if (!is_null($arrayChildren)) {
-                $model['children'] = $arrayChildren;
-            }
             array_push($arrayModel, $model);
         }
         return $arrayModel;
@@ -350,19 +373,20 @@ class ArtisanCloudService
      *
      * @param mixed $parent
      * @param int $status
+     * @param array $attributes
      * @param int $level
      *
      * @return mixed
      */
-    function getCachedTreeList($parent = NULL, int $status = NULL, int $level = 3): ?array
+    function getCachedTreeList($parent = NULL, int $status = NULL, array $attributes, int $level = 5): ?array
     {
         $cacheTag = $this->m_model->getCacheTag();
         $cacheKey = $this->m_model->getItemCacheKey($parent->uuid . '.children');
 //        dd($cacheTag, $cacheKey, CacheTimeout::CACHE_TIMEOUT_MONTH);
-        $cachedList = Cache::tags($cacheTag)->remember($cacheKey, CacheTimeout::CACHE_TIMEOUT_MONTH, function () use ($parent, $status, $level) {
+        $cachedList = Cache::tags($cacheTag)->remember($cacheKey, CacheTimeout::CACHE_TIMEOUT_MONTH, function () use ($parent, $status, $attributes, $level) {
 
-            \Log::info("request " . class_basename($parent).":{$parent->uuid} tree list here status:{$status}, level:{$level}");
-            $list = $this->getTreeList($parent, $status, $level);
+            \Log::info("request " . class_basename($parent) . ":{$parent->uuid} tree list here status:{$status}, level:{$level}");
+            $list = $this->getTreeList($parent, $status, $attributes, $level);
 
             return $list;
         });

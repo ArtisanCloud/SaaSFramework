@@ -33,7 +33,7 @@ class LandlordService extends ArtisanCloudService implements LandlordServiceCont
      *
      * @return Landlord
      */
-    public static function getSessionLandlord(): Landlord
+    public static function getSessionLandlord(): ?Landlord
     {
         return session('landlord');
     }
