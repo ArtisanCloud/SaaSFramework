@@ -21,7 +21,7 @@ class APIController extends Controller
     const TIME_FORMAT = "H:i:s";
 
     public APIResponse $m_apiResponse;
-    
+
 
     /**
      * Constructor.
@@ -36,14 +36,26 @@ class APIController extends Controller
     }
 
 
-    public function checkUserOwnsResource($model): void
+    public function checkUserCanAccessesResource(string $className): void
     {
         $user = UserService::getAuthUser();
-        if($user->cant('owns', $model) || $user->cant('owns', $model)){
+//        dd($user);
+        if ($user->cant('accesses', $className)) {
             $this->m_apiResponse->setCode(API_ERR_CODE_USER_DOES_NOT_OWN_RESOURCE);
             $this->m_apiResponse->throwJSONResponse();
         }
-        
+
+    }
+
+    public function checkUserOwnsResource($model): void
+    {
+        $user = UserService::getAuthUser();
+//        dd($user, $model);
+        if ($user->cant('owns', $model)) {
+            $this->m_apiResponse->setCode(API_ERR_CODE_USER_DOES_NOT_OWN_RESOURCE);
+            $this->m_apiResponse->throwJSONResponse();
+        }
+
     }
 
 

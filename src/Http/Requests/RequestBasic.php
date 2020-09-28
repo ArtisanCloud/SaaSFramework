@@ -22,10 +22,11 @@ class RequestBasic extends FormRequest
     function __construct()
     {
         $this->m_apiResponse = new APIResponse();
+
         // set up APIResponse string source and language
-        $this->m_apiResponse->setLocaleModule($this->m_module);
-        $sessionLocale = ClientProfile::getSessionLocale();
-        \App::setLocale($sessionLocale);
+//        $this->m_apiResponse->setLocaleModule($this->m_module);
+//        $sessionLocale = ClientProfile::getSessionLocale();
+//        \App::setLocale($sessionLocale);
 
     }
 
