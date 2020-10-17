@@ -44,6 +44,8 @@ class TenantServiceProvider extends ServiceProvider
             if (!class_exists('CreateTenantTable')) {
                 $this->publishes([
                     __DIR__ . '/../../database/migrations/create_tenants_table.php' => database_path('migrations/0_0_0_0_create_tenants_table.php'),
+                    __DIR__ . '/../../database/migrations/create_r_artisan_to_team_table.php' => database_path('migrations/0_0_0_0_create_r_artisan_to_team_table.php'),
+                    __DIR__ . '/../../database/migrations/create_r_team_to_company_table.php' => database_path('migrations/0_0_0_0_create_r_team_to_company_table.php'),
                     // you can add any number of migrations here
                 ], ['ArtisanCloud', 'SaaSFramework', 'Tenant-Migration']);
             }

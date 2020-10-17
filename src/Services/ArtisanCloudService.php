@@ -79,13 +79,27 @@ class ArtisanCloudService
     }
 
 
-    public function makeBy($arrayData)
+    /**
+     * make a model
+     *
+     * @param array $arrayData
+     *
+     * @return mixed
+     */
+    public function makeBy(array $arrayData)
     {
         $this->m_model = $this->m_model->firstOrNew($arrayData);
         return $this->m_model;
     }
 
-    public function createBy($arrayData)
+    /**
+     * create a model
+     *
+     * @param array $arrayData
+     *
+     * @return mixed
+     */
+    public function createBy(array $arrayData)
     {
         $this->m_model = $this->makeBy($arrayData);
         $bResult = $this->m_model->save();
@@ -101,9 +115,10 @@ class ArtisanCloudService
      *
      * @return mixed
      */
-    public static function GetBy($Class, array $whereConditions)
+    public static function GetBy(array $whereConditions)
     {
-        return static::GetItemsBy($Class, $whereConditions)->first();
+//        dd($whereConditions);
+        return static::GetItemsBy($whereConditions)->first();
     }
 
     /**
@@ -113,9 +128,10 @@ class ArtisanCloudService
      *
      * @return Builder
      */
-    public static function GetItemsBy($Class, array $whereConditions)
+    public static function GetItemsBy(array $whereConditions)
     {
-        return $Class::where($whereConditions);
+        $instance = new static();
+        return $instance->m_model->where($whereConditions);
     }
 
     /**
@@ -125,7 +141,7 @@ class ArtisanCloudService
      *
      * @return mixed
      */
-    public static function GetForClientBy($Class, array $whereConditions)
+    public static function GetItemForClientBy($Class, array $whereConditions)
     {
         return static::GetItemsForClientBy($Class, $whereConditions)->first();
     }
@@ -289,7 +305,7 @@ class ArtisanCloudService
 
             \Log::info("request " . $className . " service here, {$keyName}:{$keyValue} .");
 
-            $model = static::GetBy($className, [
+            $model = static::GetBy( [
                 $keyName => $keyValue,
                 'status' => $className::STATUS_NORMAL
             ]);
@@ -328,6 +344,5 @@ class ArtisanCloudService
 
     }
 
-    
 
 }

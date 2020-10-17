@@ -34,29 +34,7 @@ class APIController extends Controller
         $this->m_apiResponse = new APIResponse();
 
     }
-
-
-    public function checkUserCanAccessesResource(string $className): void
-    {
-        $user = UserService::getAuthUser();
-//        dd($user);
-        if ($user->cant('accesses', $className)) {
-            $this->m_apiResponse->setCode(API_ERR_CODE_USER_DOES_NOT_OWN_RESOURCE);
-            $this->m_apiResponse->throwJSONResponse();
-        }
-
-    }
-
-    public function checkUserOwnsResource($model): void
-    {
-        $user = UserService::getAuthUser();
-//        dd($user, $model);
-        if ($user->cant('owns', $model)) {
-            $this->m_apiResponse->setCode(API_ERR_CODE_USER_DOES_NOT_OWN_RESOURCE);
-            $this->m_apiResponse->throwJSONResponse();
-        }
-
-    }
+    
 
 
 }

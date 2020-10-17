@@ -72,11 +72,28 @@ class RequestBasic extends FormRequest
             $arrayTransformedKeys = transformArrayKeysToSnake($this->all());
 
             $arraySession = ArtisanCloudService::getSessionUUIDs();
+//            $arraySession['created_by'] = $arraySession['user_uuid'];
             $arrayTransformedKeys = array_merge($arrayTransformedKeys, $arraySession);
 //            dd($arrayTransformedKeys);
 
             $this->replace($arrayTransformedKeys);
+//            dd($this);
         });
+
+    }
+
+    public function checkUserCanAccessesResource(string $className): bool
+    {
+        $user = UserService::getAuthUser();
+//        dd($user);
+        return $user->can('accesses', $className);
+    }
+
+    public function checkUserOwnsResource($model): bool
+    {
+        $user = UserService::getAuthUser();
+//        dd($user, $model);
+        return $user->can('owns', $model);
 
     }
 
