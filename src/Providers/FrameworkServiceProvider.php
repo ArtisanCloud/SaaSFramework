@@ -63,7 +63,7 @@ class FrameworkServiceProvider extends ServiceProvider
 
     public function configPostgresSearchPath()
     {
-        $searchPath = config('database.connections.pgsql.search_path');
+        $searchPath = config('database.connections.pgsql.search_path', 'public');
         \DB::connection('pgsql')->statement("SET search_path TO {$searchPath}");
     }
 

@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace ArtisanCloud\SaaSFramework\Services\TenantService\src\Models;
 
+use App\Models\User;
 use App\Services\UserService\UserService;
 use ArtisanCloud\SaaSFramework\Models\ArtisanCloudModel;
+use ArtisanCloud\SaaSFramework\Traits\Commentable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -16,6 +19,8 @@ use Illuminate\Support\Str;
 
 class Tenant extends ArtisanCloudModel
 {
+    use Commentable;
+    
     protected $connection = 'tenant';
     const TABLE_NAME = '';
     protected $table = self::TABLE_NAME;
@@ -47,5 +52,19 @@ class Tenant extends ArtisanCloudModel
             $model->created_by = $user ? $user->uuid : 'System Creator' ;
 //            dd($model);
         });
+    }
+
+
+    
+    /**--------------------------------------------------------------- relation functions  -------------------------------------------------------------*/
+    /**
+     * Get user.
+     *
+     * @return BelongsTo
+     *
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }
