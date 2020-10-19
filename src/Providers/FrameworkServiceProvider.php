@@ -30,9 +30,6 @@ class FrameworkServiceProvider extends ServiceProvider
     public function register()
     {
         //
-        $this->app->register(LandServiceProvider::class);
-        $this->app->register(LandlordServiceProvider::class);
-        $this->app->register(TenantServiceProvider::class);
         $this->app->register(CodeServiceProvider::class);
 
     }
@@ -48,7 +45,7 @@ class FrameworkServiceProvider extends ServiceProvider
         // config framework router
         $this->configRouter();
 
-        // config search path for pprtgres
+        // config search path for portgres
         $this->configPostgresSearchPath();
 
         if ($this->app->runningInConsole()) {
