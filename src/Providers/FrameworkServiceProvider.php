@@ -4,7 +4,11 @@ declare(strict_types=1);
 namespace ArtisanCloud\SaaSFramework\Providers;
 
 use App\Http\Kernel;
-use ArtisanCloud\SaaSFramework\Http\Middleware\{CheckLandlord, CheckUser, CheckHeader, CheckClientHavingUser};
+use ArtisanCloud\SaaSFramework\Http\Middleware\{
+    CheckHeader,
+    CheckClientHavingUser
+};
+
 
 use ArtisanCloud\SaaSFramework\Services\LandService\src\Providers\LandServiceProvider;
 use ArtisanCloud\SaaSFramework\Services\LandlordService\src\Providers\LandlordServiceProvider;
@@ -75,9 +79,7 @@ class FrameworkServiceProvider extends ServiceProvider
 
         // alias middlewares
         $router = resolve(Router::class);
-        $router->aliasMiddleware('checkLandlord', CheckLandlord::class);
         $router->aliasMiddleware('checkHeader', CheckHeader::class);
-        $router->aliasMiddleware('checkUser', CheckUser::class);
         $router->aliasMiddleware('checkClientHavingUser', CheckClientHavingUser::class);
 
 
