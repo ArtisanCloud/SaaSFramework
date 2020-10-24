@@ -6,7 +6,7 @@ namespace ArtisanCloud\SaaSFramework\Http\Controllers\API;
 use App\Models\User;
 use App\Services\UserService\UserService;
 use ArtisanCloud\SaaSFramework\Services\ArtisanCloudService;
-use ArtisanCloud\SaaSFramework\Services\LandlordService\src\Models\Landlord;
+use ArtisanCloud\SaaSMonomer\Services\LandlordService\src\Models\Landlord;
 use ArtisanCloud\SaaSPolymer\Services\ArtisanService\src\Models\Artisan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

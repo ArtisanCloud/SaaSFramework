@@ -6,7 +6,7 @@ namespace ArtisanCloud\SaaSFramework\Services;
 
 use App\Services\UserService\UserService;
 use ArtisanCloud\SaaSFramework\Models\ArtisanCloudModel;
-use ArtisanCloud\SaaSFramework\Services\LandlordService\src\LandlordService;
+use ArtisanCloud\SaaSMonomer\Services\LandlordService\src\LandlordService;
 use ArtisanCloud\SaaSFramework\Traits\CacheTimeout;
 use ArtisanCloud\SaaSPolymer\Services\ArtisanService\src\ArtisanService;
 use Illuminate\Database\Query\Builder;

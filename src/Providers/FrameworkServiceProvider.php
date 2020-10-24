@@ -11,7 +11,7 @@ use ArtisanCloud\SaaSFramework\Http\Middleware\{
 
 
 use ArtisanCloud\SaaSFramework\Services\LandService\src\Providers\LandServiceProvider;
-use ArtisanCloud\SaaSFramework\Services\LandlordService\src\Providers\LandlordServiceProvider;
+use ArtisanCloud\SaaSMonomer\Services\LandlordService\src\Providers\LandlordServiceProvider;
 use ArtisanCloud\SaaSFramework\Services\TenantService\src\Providers\TenantServiceProvider;
 use ArtisanCloud\SaaSFramework\Services\CodeService\Providers\CodeServiceProvider;
 
@@ -72,9 +72,7 @@ class FrameworkServiceProvider extends ServiceProvider
     {
         // push middlewares
         $kernel = resolve(Kernel::class);
-        $kernel->pushMiddleware(CheckLandlord::class);
         $kernel->pushMiddleware(CheckHeader::class);
-        $kernel->pushMiddleware(CheckUser::class);
         $kernel->pushMiddleware(CheckClientHavingUser::class);
 
         // alias middlewares

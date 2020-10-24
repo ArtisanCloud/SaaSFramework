@@ -39,7 +39,10 @@ class ArtisanCloudModel extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->{$model->getKeyName()} = (string)Str::uuid();
+            $keyName = $model->getKeyName();
+            if($keyName==='uuid'){
+                $model->{$keyName} = (string)Str::uuid();
+            }
         });
     }
 
