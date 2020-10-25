@@ -19,12 +19,19 @@ class APIResponse implements Responsable
 
     private $data = [];
 
+    protected $m_messageNamespace;
     protected $m_module;
 
     public function __construct()
     {
         $this->m_returnCode = API_RETURN_CODE_INIT;
+        $this->m_messageNamespace = null;
         $this->m_module = 'messages';
+    }
+
+    public function setLocaleNamespace($namespace = null)
+    {
+        $this->m_messageNamespace = $namespace;
     }
 
     public function setLocaleModule($module = 'messages')
@@ -157,7 +164,7 @@ class APIResponse implements Responsable
      */
     public function setResultMessage(string $resultMessage = ''): APIResponse
     {
-        $this->resultMessage = $resultMessage ?: $this->getLocaleMessage($this->resultCode);
+        $this->resultMessage = $resultMessage ?: $this->getLocaleMessage($this->resultCode, $this->m_messageNamespace);
         return $this;
     }
 
@@ -197,11 +204,10 @@ class APIResponse implements Responsable
     }
 
 
-
     /**
      * @inheritDoc
      */
-    public function toResponse($request=null): JsonResponse
+    public function toResponse($request = null): JsonResponse
     {
         return $this->toJson();
     }
@@ -226,14 +232,14 @@ class APIResponse implements Responsable
      *
      * @return string $strMessage
      */
-    protected function getLocaleMessage($code = '')
+    protected function getLocaleMessage($code = '', $namespace = null)
     {
-
 //        dd($locale);
 
+        $namespace = $namespace ? $namespace . '::' : '';
         $module = $this->m_module ?? 'messages';
-        $strMessage = __("{$module}.{$code}");
-//        dump($code,$strMessage);
+        $strMessage = __("{$namespace}{$module}.{$code}");
+//        dd($namespace, $module, $code, $strMessage);
 
         return $strMessage;
     }
