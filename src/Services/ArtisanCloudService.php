@@ -9,7 +9,7 @@ use ArtisanCloud\SaaSFramework\Models\ArtisanCloudModel;
 use ArtisanCloud\SaaSMonomer\Services\LandlordService\src\LandlordService;
 use ArtisanCloud\SaaSFramework\Traits\CacheTimeout;
 use ArtisanCloud\SaaSPolymer\Services\ArtisanService\src\ArtisanService;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
@@ -226,9 +226,9 @@ class ArtisanCloudService
      *
      * @param array $uuids
      *
-     * @return Collection
+     * @return Builder
      */
-    public function getModelsForClientByUUIDs(array $uuids): Collection
+    public function getModelsForClientByUUIDs(array $uuids): Builder
     {
         $models = $this->m_model
             ->whereIn('uuid', $uuids)
@@ -257,9 +257,9 @@ class ArtisanCloudService
      *
      * @param string $uuid
      *
-     * @return Collection
+     * @return Builder
      */
-    public function getModelsByUUIDs(array $uuids)
+    public function getModelsByUUIDs(array $uuids) : Builder
     {
         $models = $this->m_model->whereIn('uuid', $uuids);
 
