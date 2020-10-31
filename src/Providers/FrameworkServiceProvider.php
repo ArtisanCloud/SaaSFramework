@@ -53,7 +53,6 @@ class FrameworkServiceProvider extends ServiceProvider
         $this->configPostgresSearchPath();
 
         if ($this->app->runningInConsole()) {
-
             $this->publishes([
                 __DIR__ . '/../../config/framework.php' => "/../" . config_path('artisancloud/framework.php'),
             ], ['ArtisanCloud', 'SaaSFramework', 'Landlord-Config']);

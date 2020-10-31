@@ -77,3 +77,5 @@ const API_ERR_VALIDATION = 404000;
 
 const API_ERR_CODE_SELF = 80000;
 
+
+const CREATED_BY_SYSTEM = 'System Creator';
