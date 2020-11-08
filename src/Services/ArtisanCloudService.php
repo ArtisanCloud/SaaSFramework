@@ -128,9 +128,12 @@ class ArtisanCloudService
      *
      * @return Builder
      */
-    public static function GetItemsBy(array $whereConditions)
+    public static function GetItemsBy(array $whereConditions, $model = null)
     {
         $instance = new static();
+        if ($model) {
+            $instance->setModel($model);
+        }
         return $instance->m_model->where($whereConditions);
     }
 
@@ -259,7 +262,7 @@ class ArtisanCloudService
      *
      * @return Builder
      */
-    public function getModelsByUUIDs(array $uuids) : Builder
+    public function getModelsByUUIDs(array $uuids): Builder
     {
         $models = $this->m_model->whereIn('uuid', $uuids);
 
@@ -305,7 +308,7 @@ class ArtisanCloudService
 
             \Log::info("request " . $className . " service here, {$keyName}:{$keyValue} .");
 
-            $model = static::GetBy( [
+            $model = static::GetBy([
                 $keyName => $keyValue,
                 'status' => $className::STATUS_NORMAL
             ]);
