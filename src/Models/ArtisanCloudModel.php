@@ -22,7 +22,7 @@ class ArtisanCloudModel extends Model
 
     const STATUS_INIT = 0;          // init
     const STATUS_NORMAL = 1;        // normal
-    const STATUS_INVALID = 4;       // deleted
+    const STATUS_INVALID = 4;       // soft deleted
 
     const PAGE_DEFAULT = 1;
     const PER_PAGE_DEFAULT = 10;
