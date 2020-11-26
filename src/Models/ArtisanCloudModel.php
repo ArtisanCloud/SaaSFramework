@@ -12,6 +12,7 @@ use ArtisanCloud\Taggable\Traits\Taggable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use phpDocumentor\Reflection\Types\This;
 
 
 class ArtisanCloudModel extends Model
@@ -49,12 +50,12 @@ class ArtisanCloudModel extends Model
     /**--------------------------------------------------------------- schema functions  -------------------------------------------------------------*/
     public static function getPrimaryKeyName()
     {
-        return (new self())->getKeyName();
+        return (new static())->getKeyName();
     }
 
     public static function getConnectionNameStatic()
     {
-        return (new self())->getConnectionName();
+        return (new static())->getConnectionName();
     }
 
     public function getForeignKey()
