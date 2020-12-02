@@ -54,10 +54,12 @@ class ArtisanCloudService
     public static function getSessions(): array
     {
         $artisan = ArtisanService::getAuthArtisan();
-        $user = UserService::getAuthUser();
-        $landlord = LandlordService::getSessionLandlord();
         $arraySession['artisan'] = $artisan;
+        
+        $user = UserService::getAuthUser();
         $arraySession['user'] = $user;
+        
+        $landlord = LandlordService::getSessionLandlord();
         $arraySession['landlord'] = $landlord;
 
         return $arraySession;
