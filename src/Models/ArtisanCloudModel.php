@@ -3,14 +3,18 @@ declare(strict_types=1);
 
 namespace ArtisanCloud\SaaSFramework\Models;
 
+use App\Models\User;
+use App\Services\UserService\UserService;
 use ArtisanCloud\SaaSFramework\Traits\Cacheable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use ArtisanCloud\Taggable\Traits\Taggable;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use phpDocumentor\Reflection\Types\This;
 
@@ -41,9 +45,15 @@ class ArtisanCloudModel extends Model
 
         static::creating(function ($model) {
             $keyName = $model->getKeyName();
-            if($keyName==='uuid'){
+            if ($keyName === 'uuid') {
                 $model->{$keyName} = (string)Str::uuid();
             }
+
+            if ($model->hasAttribute('created_by')) {
+                $user = UserService::getAuthUser();
+                $model->created_by = $user ? $user->uuid : CREATED_BY_SYSTEM;
+            }
+
         });
     }
 
@@ -68,6 +78,12 @@ class ArtisanCloudModel extends Model
         return $key . '_' . $this->getKeyName();
     }
 
+    public function hasAttribute($column)
+    {
+        // setup user
+        return Schema::hasColumn($this->getTable(), $column);
+
+    }
 
 
     /**--------------------------------------------------------------- condition functions  -------------------------------------------------------------*/
@@ -75,5 +91,19 @@ class ArtisanCloudModel extends Model
     {
         return $query->where('status', $this::STATUS_NORMAL);
     }
+
+
+    /**--------------------------------------------------------------- relation functions  -------------------------------------------------------------*/
+    /**
+     * Get creator.
+     *
+     * @return BelongsTo
+     *
+     */
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
 
 }
