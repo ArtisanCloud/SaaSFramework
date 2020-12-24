@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ArtisanCloud\SaaSFramework\Providers;
 
 use App\Http\Kernel;
+use ArtisanCloud\SaaSFramework\Console\Commands\Schema\Iterate;
 use ArtisanCloud\SaaSFramework\Http\Middleware\{
     CheckHeader,
     CheckClientHavingUser
@@ -53,9 +54,9 @@ class FrameworkServiceProvider extends ServiceProvider
         $this->configPostgresSearchPath();
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../../config/framework.php' => "/../" . config_path('artisancloud/framework.php'),
-            ], ['ArtisanCloud', 'SaaSFramework', 'Landlord-Config']);
+
+            $this->publishConfig();
+            $this->publishCommand();
         }
 
 
@@ -65,6 +66,13 @@ class FrameworkServiceProvider extends ServiceProvider
     {
         $searchPath = config('database.connections.pgsql.search_path', 'public');
         \DB::connection()->statement("SET search_path TO {$searchPath}");
+    }
+
+    protected function publishConfig()
+    {
+        $this->publishes([
+            __DIR__ . '/../../config/framework.php' => "/../" . config_path('artisancloud/framework.php'),
+        ], ['ArtisanCloud', 'SaaSFramework', 'Landlord-Config']);
     }
 
     public function configRouter()
@@ -82,5 +90,12 @@ class FrameworkServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom(__DIR__ . '/../../routes/api.php');
 
+    }
+
+    protected function publishCommand()
+    {
+        $this->commands([
+            Iterate::class,
+        ]);
     }
 }
