@@ -49,13 +49,17 @@ class Iterate extends Command
 
 //        Artisan::call('passport:install');
         $this->info('command iterate schema...');
-
-        DB::table('tenants')->chunk(100, function($tenants)
+        DB::table('tenants')->orderBy('uuid')->chunk(100, function($tenants)
         {
             foreach ($tenants as $tenant)
             {
                 //
-                $this->info('process tenant {$tenant->}');
+                $this->info("process tenant: {$tenant->host}");
+
+                $dispatch = JobSchema::dispatch($tenant)
+                    ->onConnection('redis-schema-iteration')
+                    ->onQueue('schema-iteration');
+
             }
         });
 
