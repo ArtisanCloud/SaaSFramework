@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ArtisanCloud\SaaSFramework\Console\Commands\Schema;
 
+use ArtisanCloud\SaaSFramework\Jobs\IterateSchema;
+use ArtisanCloud\SaaSMonomer\Services\TenantService\src\Models\Tenant;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -49,14 +51,18 @@ class Iterate extends Command
 
 //        Artisan::call('passport:install');
         $this->info('command iterate schema...');
-        DB::table('tenants')->orderBy('uuid')->chunk(100, function($tenants)
+//        DB::table('tenants')
+        Tenant::orderBy('uuid')
+            ->chunk(100, function($tenants)
         {
+//            dd($tenants);
             foreach ($tenants as $tenant)
             {
                 //
+//                dd($tenant);
                 $this->info("process tenant: {$tenant->host}");
 
-                $dispatch = JobSchema::dispatch($tenant)
+                $dispatch = IterateSchema::dispatch($tenant)
                     ->onConnection('redis-schema-iteration')
                     ->onQueue('schema-iteration');
 
