@@ -5,6 +5,7 @@ namespace ArtisanCloud\SaaSFramework\Jobs;
 use ArtisanCloud\SaaSFramework\Exceptions\BaseException;
 
 use ArtisanCloud\SaaSMonomer\Services\TenantService\src\Models\Tenant;
+use ArtisanCloud\SaaSMonomer\Services\TenantService\src\Models\TenantModel;
 use ArtisanCloud\SaaSMonomer\Services\TenantService\src\TenantService;
 
 use ArtisanCloud\UBT\Facades\UBT;
@@ -14,6 +15,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Throwable;
@@ -49,38 +51,44 @@ class IterateSchema implements ShouldQueue
     public function handle()
     {
         $tenant = $this->tenantService->getModel();
-        //
-//        UBT::info('Job handle create tenant for org: ', [
-//            'mobile' => $this->org->creator->mobile,
-//            'orgName' => $this->org->name,
-//        ]);
+//        dd($tenant);
+        // check tenant exists
+        if (is_null($tenant)) {
+            UBT::info('Tenant is null');
+            return;
+        }
 
-//        $this->org->load('tenant');
-//        if (!is_null($this->org->tenant)) {
-//            UBT::info(
-//                'Tenant had already created tenant, which tenant status is ' . $this->org->tenant->status,
-//                ['orgName' => $this->org->name]
-//            );
-//            return;
-//        }
-//
-//        $tenant = \DB::connection()->transaction(function () {
-//            $tenant = null;
-//            try {
-//                // create a tenant for org
-//                $arrayDBInfo = $this->tenantService->generateDatabaseAccessInfoBy($this->org->short_name, $this->org->uuid);
-//                $arrayDBInfo['org_uuid'] = $this->org->uuid;
-//                $tenant = $this->tenantService->createBy($arrayDBInfo);
-//
-//            } catch (Throwable $e) {
-////                dd($e);
-//                report($e);
-//            }
-//
-//            return $tenant;
-//
-//        });
-        dd($tenant);
+        // log start
+        UBT::info('Job handle iterate schema: ', [
+            'tenant' => $tenant->uuid,
+            'subdomain' => $tenant->subdomain,
+        ]);
+
+        // set tenant connection
+        $this->tenantService->setConnection($tenant);
+
+        // run the schema iteration sql
+        $connection = DB::connection(TenantModel::getConnectionNameStatic());
+        $result = $connection->transaction(function () use ($connection){
+            $result = false;
+            try {
+                $result = $connection->unprepared(file_get_contents(database_path('migrations/tenants/iterations/run.sql')));
+
+            } catch (Throwable $e) {
+//                dd($e);
+                report($e);
+            }
+
+            return $result;
+
+        });
+
+        // log start
+        UBT::info('Job iterate schema result:' . $result, [
+            'tenant' => $tenant->uuid,
+            'subdomain' => $tenant->subdomain,
+        ]);
+
 
 
     }
